@@ -63,7 +63,7 @@ param	: tipo_especificador ID 			{ $$ = }
 	| tipo_especificador ID LCOLCHETE RCOLCHETE 	{ $$ = }
 	;
 composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ $$ = }
-		| LCHAVE local_declaracoes statement_lista  RCHAVE { $$ = }				
+		| LCHAVE local_declaracoes statement_lista  RCHAVE { $$ = 222222222222}				
 ;
 local_declaracoes	: local_declaracaoes var_declaracao
 			;
