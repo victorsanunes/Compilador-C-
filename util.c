@@ -142,17 +142,17 @@ void printTree( TreeNode * tree )
         case IfK:
           fprintf(listing,"If\n");
           break;
-        case RepeatK:
-          fprintf(listing,"Repeat\n");
+        case WhileK:
+          fprintf(listing,"While\n");
           break;
         case AssignK:
           fprintf(listing,"Assign to: %s\n",tree->attr.name);
           break;
-        case ReadK:
-          fprintf(listing,"Read: %s\n",tree->attr.name);
+        case VoidK:
+          fprintf(listing,"Void: %s\n",tree->attr.name);
           break;
-        case WriteK:
-          fprintf(listing,"Write\n");
+        case IntK:
+          fprintf(listing,"Int\n");
           break;
         default:
           fprintf(listing,"Unknown ExpNode kind\n");
