@@ -64,8 +64,8 @@ param	: tipo_especificador ID 			{ $$ = }
 	;
 composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ $$ = }
 		| LCHAVE local_declaracoes statement_lista  RCHAVE { $$ = }				
-;
-local_declaracoes	: local_declaracaoes var_declaracao
+		;
+local_declaracoes	: local_declaracaoes var_declaracao { $$ = }
 			;
 statement_lista 	: statement_lista statement
 			;
