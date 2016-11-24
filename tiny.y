@@ -21,15 +21,40 @@ static int yylex(void);
 
 %}
 
-%token IF THEN ELSE END WHILE VOID RETURN INT ID NUM 
-%token ASSIGN LT MT EQ DIFERENT MENOROUIGUAL MAIOROUIGUAL LPAREN RPAREN LCOLCHETE RCOLCHETE LCHAVE RCHAVE SEMI PLUS MINUS TIMES OVER COMA ENDFILE
+%token IF
+%token THEN 
+%token ELSE 
+%token END 
+%token WHILE 
+%token VOID 
+%token RETURN 
+%token INT 
+%token ID 
+%token NUM 
+%token ASSIGN 
+%token LT 
+%token MT 
+%token EQ 
+%token DIFERENT 
+%token MENOROUIGUAL 
+%token MAIOROUIGUAL 
+%token LPAREN 
+%token RPAREN 
+%token LCOLCHETE 
+%token RCOLCHETE 
+%token LCHAVE 
+%token RCHAVE 
+%token SEMI 
+%token PLUS 
+%token MINUS 
+%token TIMES 
+%token OVER 
+%token COMA 
+%token ENDFILE
 %token ERROR 
 
 %% /* Grammar for C- */
 
-programa     : declaracao_lista
-                 { savedTree = $1;} 
-            ;
 declaracao_lista    : declaracao_lista declaracao
                  { YYSTYPE t = $1;
                    if (t != NULL)
@@ -42,7 +67,7 @@ declaracao_lista    : declaracao_lista declaracao
             | declaracao  { $$ = $1; }
             ;
 declaracao	: var_declaracao	{ $$ = $1; }
-		| fun_declaracao	{ $$ = $1; } 		
+		/*| fun_declaracao	{ $$ = $1; } 		*/
             	| error  		{ $$ = NULL; }
             	;
 var_declaracao	: tipo_especificador ID SEMI	{ $$ = $1;
@@ -50,17 +75,17 @@ var_declaracao	: tipo_especificador ID SEMI	{ $$ = $1;
 						}
 		| tipo_especificador ID LCOLCHETE NUM RCOLCHETE SEMI 	{ $$ = $1; }
 		;
-tipo_especificador 	: INT 	{$$ = newExpNode(IntK)}	
-			| VOID	{$$ = newStmtNode(VoidK)}
+tipo_especificador 	: INT 	{$$ = newExpNode(IntK); }	
+			| VOID	{$$ = newStmtNode(VoidK); }
 			;
-fun_declaracao	: tipo_especificador ID LPAREN params RPAREN composto_decl 	{ $$ = $1;
+/*fun_declaracao	: tipo_especificador ID LPAREN params RPAREN composto_decl 	{ $$ = $1;
 										  $$->child[0] = $2;
 										  $$->child[1] = $4;
 										  $$->child[2] = $6;
 										}
 		;
 params	: param_lista 	{ $$ = $1; }
-	| VOID		{ $$ = newExpKind(Voidk); }
+	| VOID		{ $$ = newExpKind(VoidK); }
 	;
 param_lista	: param_lista COMA param 	{  
                  				  YYSTYPE t = $1;
@@ -89,22 +114,18 @@ composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ YYSTYPE t = $2
 									     else $$ = $3;
 									 }			
 		;
-local_declaracoes	: local_declaracaoes var_declaracao { $$ = }
-			;
-statement_lista 	: statement_lista statement 	{ $$ = }
-
-compos_decl :   LCHAVOSO RCHAVOSO
+composto_decl :   LCHAVE RCHAVE
                   { $$ = NULL;}
-            |  LCHAVOSO local_decl RCHAVOSO
+            |  LCHAVE local_declaracoes RCHAVE
                   { $$ = $2;}
-            | LCHAVOSO statem_lista RCHAVOSO
+            | LCHAVE statement_lista RCHAVE
                   { $$ = $2;}
-            | LCHAVOSO local_decl statem_lista RCHAVOSO
+            | LCHAVE local_declaracoes statement_lista RCHAVE
                  { $$ = $2;
                    $$->child[0] = $3;
                  }
             ;
-local_decl : local_decl var_decl
+local_declaracoes : local_declaracoes var_declaracao
 { YYSTYPE t = $1;
   if (t != NULL)
     { while (t->sibling != NULL)
@@ -114,7 +135,7 @@ local_decl : local_decl var_decl
       else $$ = $2;
 }
             ;
-statem_lista : statem_lista statem
+statement_lista : statement_lista statement
 { YYSTYPE t = $1;
   if (t != NULL)
     { while (t->sibling != NULL)
@@ -172,7 +193,10 @@ var	: ID					{ $$ = newExpNode(IdK);
 						  $$->child[0] = $3;
 						}
 	;
-simples_expressao	: soma_expressao relacional soma_expressao	{ $$ = }
+simples_expressao	: soma_expressao relacional soma_expressao	{ $$ = $2;
+									  $$->child[0] = $1;
+									  $$->child[1] = $3; 
+									}
 			| soma_expressao				{ $$ = $1; }
 			;
 relacional	: MENOROUIGUAL	{ $$ = newExpNode(OpK);
@@ -238,83 +262,7 @@ arg_lista	: arg_lista COMA expressao	{ YYSTYPE t = $1;
 						}	
 		| expressao			{ $$ = $1; }
 		;
-
-
-assign_stmt : ID { savedName = copyString(tokenString);
-                   savedLineNo = lineno; }
-              ASSIGN expressao
-                 { $$ = newStmtNode(AssignK);
-                   $$->child[0] = $4;
-                   $$->attr.name = savedName;
-                   $$->lineno = savedLineNo;
-                 }
-            ;
-read_stmt   : READ ID
-                 { $$ = newStmtNode(ReadK);
-                   $$->attr.name =
-                     copyString(tokenString);
-                 }
-            ;
-write_stmt  : WRITE expressao
-                 { $$ = newStmtNode(WriteK);
-                   $$->child[0] = $2;
-                 }
-            ;
-expressao         : simple_expressao LT simple_expressao 
-                 { $$ = newExpNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = LT;
-                 }
-            | simple_expressao EQ simple_expressao
-                 { $$ = newExpNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = EQ;
-                 }
-            | simple_expressao { $$ = $1; }
-            ;
-simple_expressao  : simple_expressao PLUS term 
-                 { $$ = newexpressaoNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = PLUS;
-                 }
-            | simple_expressao MINUS term
-                 { $$ = newexpressaoNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = MINUS;
-                 } 
-            | term { $$ = $1; }
-            ;
-term        : term TIMES factor 
-                 { $$ = newexpressaoNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = TIMES;
-                 }
-            | term OVER factor
-                 { $$ = newexpressaoNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = OVER;
-                 }
-            | factor { $$ = $1; }
-            ;
-factor      : LPAREN expressao RPAREN
-                 { $$ = $2; }
-            | NUM
-                 { $$ = newexpressaoNode(ConstK);
-                   $$->attr.val = atoi(tokenString);
-                 }
-            | ID { $$ = newExpNode(IdK);
-                   $$->attr.name =
-                         copyString(tokenString);
-                 }
-            | error { $$ = NULL; }
-            ;
-
+*/
 %%
 
 int yyerror(char * message)
