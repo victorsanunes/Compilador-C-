@@ -29,8 +29,8 @@ whitespace  [ \t]+
 "return"        {return RETURN;}
 "void"          {return VOID;}
 "while"         {return WHILE;}
-"=="             {return EQ;}
-"="            {return ASSIGN;}
+"=="            {return EQ;}
+"="            	{return ASSIGN;}
 "!="            {return DIFERENT;}
 "<"             {return LT;}
 "<="           	{return MENOROUIGUAL;}

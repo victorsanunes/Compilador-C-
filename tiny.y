@@ -55,6 +55,8 @@ static int yylex(void);
 
 %% /* Grammar for C- */
 
+programa	: declaracao_lista { savedTree = $1; }
+		;
 declaracao_lista    : declaracao_lista declaracao
                  { YYSTYPE t = $1;
                    if (t != NULL)
@@ -67,25 +69,38 @@ declaracao_lista    : declaracao_lista declaracao
             | declaracao  { $$ = $1; }
             ;
 declaracao	: var_declaracao	{ $$ = $1; }
-		/*| fun_declaracao	{ $$ = $1; } 		*/
-            	| error  		{ $$ = NULL; }
+		| fun_declaracao	{ $$ = $1; } 		
+            	//| error  		{ $$ = NULL; }
             	;
-var_declaracao	: tipo_especificador ID SEMI	{ $$ = $1;
-						  $2 = newExpKind(IdK);
+var_declaracao	: tipo_especificador id SEMI	{ $$ = newDeclNode(VarK);
+						  $$->type = $1->type;
+						  $$->attr.name = $2->attr.name;
+						  $$->lineno = $2->lineno;
 						}
-		| tipo_especificador ID LCOLCHETE NUM RCOLCHETE SEMI 	{ $$ = $1; }
+		| tipo_especificador id LCOLCHETE NUM RCOLCHETE SEMI 	{ $$ = newDeclNode(VarK);
+						  			  $$->type = $1->type;
+									  $$->attr.name = $2->attr.name;
+									  $$->lineno = $2->lineno;
+									}
 		;
-tipo_especificador 	: INT 	{$$ = newExpNode(IntK); }	
-			| VOID	{$$ = newStmtNode(VoidK); }
+tipo_especificador 	: INT 	{$$ = newExpNode(VarK);
+				 $$->type = Int;
+				}	
+			| VOID	{$$ = newStmtNode(VarK); 
+				 $$->type = Void;
+				}
 			;
-/*fun_declaracao	: tipo_especificador ID LPAREN params RPAREN composto_decl 	{ $$ = $1;
-										  $$->child[0] = $2;
-										  $$->child[1] = $4;
-										  $$->child[2] = $6;
-										}
+fun_declaracao	: tipo_especificador id LPAREN params RPAREN composto_decl 	
+			{ $$ = newDeclNode(FunK);
+			  $$->attr.name = $2->attr.name;
+			  $$->lineno = $2->lineno; 
+			  $$->type = $1->type;
+			  $$->child[0] = $4;
+			  $$->child[1] = $6; 
+			}
 		;
 params	: param_lista 	{ $$ = $1; }
-	| VOID		{ $$ = newExpKind(VoidK); }
+	| VOID		{ $$ = NULL; }
 	;
 param_lista	: param_lista COMA param 	{  
                  				  YYSTYPE t = $1;
@@ -98,11 +113,14 @@ param_lista	: param_lista COMA param 	{
 						 }
 		| param				{ $$ = $1;}
 		;
-param	: tipo_especificador ID 			{ $$ = $1; 
-							  $$->child[0] = $2;							
+param	: tipo_especificador id 			{ $$ = newDeclNode(ParamK);
+							  $$->type = $1->type;
+							  $$->attr.name = $2->attr.name;
 							}
-	| tipo_especificador ID LCOLCHETE RCOLCHETE 	{ $$ = $1; 
-							  $$->child[0] = $2; 
+	| tipo_especificador ID LCOLCHETE RCOLCHETE 	{ $$ = newDeclNode(ParamK);
+							  $$->type = $1->type;
+							  $$->attr.name = $2->attr.name;
+							  $$->lineno = $2->lineno; 
 							}
 	;
 composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ YYSTYPE t = $2;
@@ -110,11 +128,11 @@ composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ YYSTYPE t = $2
 									   { while (t->sibling != NULL)
 										t = t->sibling;
 									     t->sibling = $3;
-									     $$ = $1; }
+									     $$ = $2; }
 									     else $$ = $3;
 									 }			
 		;
-composto_decl :   LCHAVE RCHAVE
+/*composto_decl :   LCHAVE RCHAVE
                   { $$ = NULL;}
             |  LCHAVE local_declaracoes RCHAVE
                   { $$ = $2;}
@@ -125,17 +143,20 @@ composto_decl :   LCHAVE RCHAVE
                    $$->child[0] = $3;
                  }
             ;
-local_declaracoes : local_declaracoes var_declaracao
-{ YYSTYPE t = $1;
-  if (t != NULL)
-    { while (t->sibling != NULL)
-      t = t->sibling;
-      t->sibling = $2;
-      $$ = $1; }
-      else $$ = $2;
-}
+*/
+local_declaracoes	: { $$ = NULL; }
+		   	| local_declaracoes var_declaracao
+							{ YYSTYPE t = $1;
+							  if (t != NULL)
+							    { while (t->sibling != NULL)
+							      t = t->sibling;
+							      t->sibling = $2;
+							      $$ = $1; }
+							      else $$ = $2;
+							}
             ;
-statement_lista : statement_lista statement
+statement_lista : { $$ = NULL; }
+		| statement_lista statement
 { YYSTYPE t = $1;
   if (t != NULL)
     { while (t->sibling != NULL)
@@ -150,14 +171,13 @@ statement		: expressao_decl	{ $$ = $1; }
 			| selecao_decl		{ $$ = $1; }
 			| iteracao_decl		{ $$ = $1; }
 			| retorno_decl		{ $$ = $1; }
+			//| error 		{ $$ = NULL; }
 			;
 expressao_decl		: expressao SEMI	{ $$ = $1; }
-			| SEMI			{ $$ = newExpNode(OpK);
-				  		  $$->attr.op = SEMI;
-						}
+			| SEMI			{ $$ = NULL; }
 			;
 
-selecao_decl     : IF LPAREN expressao RPAREN statement
+selecao_decl     : IF LPAREN expressao RPAREN statement /*%precLOWER_THAN_ELSE*/
                  { $$ = newStmtNode(IfK);
                    $$->child[0] = $3;
                    $$->child[1] = $5;
@@ -175,27 +195,40 @@ iteracao_decl : WHILE LPAREN expressao RPAREN statement
                    $$->child[1] = $5;
                  }
             ;
-retorno_decl	: RETURN SEMI		{ $$ =  newStmtNode(ReturnK); }
-		| RETURN expressao SEMI	{ $$ = $1; 
-					  $$->child[0] = $1;
+retorno_decl	: RETURN SEMI		{ $$ =  newStmtNode(ReturnK); 
+					  $$->child[0] = NULL;
+					  //$$->tipo = tipoFun;
+					}
+		| RETURN expressao SEMI	{ $$ = newStmtNode(ReturnK); 
+					  $$->child[0] = $2;
+					  //$$->tipo = tipoFun;
 					}
 		;
+/*continua_decl	: composto_decl { $$ = $1; }
+		| statement {$$ = $1; }
+		;
+*/
 expressao	: var ASSIGN expressao	{ $$ = newExpNode(AssignK); 
 					  $$->child[0] = $1;
-					  $$->child[1] = $3;					
+					  $$->attr.op = ASSIGN;
+					  $$->child[1] = $3; 
 					}
 		| simples_expressao	{ $$ = $1; }
 		;
-var	: ID					{ $$ = newExpNode(IdK);
-                   				  $$->attr.name =
-			                          	copyString(tokenString); }
-	| ID LCOLCHETE expressao RCOLCHETE	{ $$ = $1; 
-						  $$->child[0] = $3;
+var	: id					{ $$ = newExpNode(IdK);
+                   				  $$->lineno = $1->lineno;
+						  $$->attr.name = $1->attr.name;	
+						}
+	| id LCOLCHETE expressao RCOLCHETE	{ $$ = newExpNode(IdK);
+						  $$->attr.name = $1->attr.name;
+						  $$->lineno = $1->lineno; 
+						  $$->child[1] = $3;
 						}
 	;
-simples_expressao	: soma_expressao relacional soma_expressao	{ $$ = $2;
+simples_expressao	: soma_expressao relacional soma_expressao	{ $$ = newExpNode(OpK);
 									  $$->child[0] = $1;
-									  $$->child[1] = $3; 
+									  $$->child[2] = $3; 
+									  $$->attr.op = $2->attr.op;
 									}
 			| soma_expressao				{ $$ = $1; }
 			;
@@ -211,16 +244,17 @@ relacional	: MENOROUIGUAL	{ $$ = newExpNode(OpK);
 		| MAIOROUIGUAL	{ $$ = newExpNode(OpK);
 				  $$->attr.op = MAIOROUIGUAL;
 				}	
-		| ASSIGN	{ $$ = newExpNode(OpK);
-				  $$->attr.op = ASSIGN;
+		| EQ	{ $$ = newExpNode(OpK);
+				  $$->attr.op = EQ;
 				}
 		| DIFERENT	{ $$ = newExpNode(OpK);
 				  $$->attr.op = DIFERENT;
 				}
 		;
-soma_expressao	: soma_expressao soma termo	{ $$ = $2; 
+soma_expressao	: soma_expressao soma termo	{ $$ = newExpNode(OpK); 
 						  $$->child[0] = $1;
 						  $$->child[1] = $3;
+						  $$->attr.op = $2->attr.op;
 						}
 		| termo				{ $$ = $1; }
 		;
@@ -229,9 +263,10 @@ soma	: PLUS	{ $$ = newExpNode(OpK);
 	| MINUS	{ $$ = newExpNode(OpK);
 		  $$->attr.op = MINUS;}
 	;
-termo	: termo mult fator	{ $$ = $2; 
+termo	: termo mult fator	{ $$ = newExpNode(OpK); 
 				  $$->child[0] = $1;
 				  $$->child[1] = $3;
+				  $$->attr.op = $2->attr.op; 
 				}
 	| fator			{ $$ = $1; }
 	;
@@ -242,15 +277,19 @@ mult	: TIMES	{ $$ = newExpNode(OpK);
 		  $$->attr.op = OVER;
 		}
 	;
-fator	: LPAREN expressao RPAREN	{ $$ = $1; }
+fator	: LPAREN expressao RPAREN	{ $$ = $2; }
 	| var				{ $$ = $1; }
 	| ativacao			{ $$ = $1; }
-	| NUM				{ $$ = $1; }
+	| NUM				{ $$ = newExpNode(ConstK);
+					  $$->attr.val = atoi(tokenString);
+					}
 	;
-ativacao	: ID LPAREN arg_lista RPAREN	{ $$ = $1; 
-						  $$->child[0] = $3; 
+ativacao	: id LPAREN arg_lista RPAREN	{ $$ = newStmtNode(ActivationK);
+						  $$->attr.name = $1->attr.name = $1->attr.name; 
+						  $$->child[0] = $3;
+						  $$->lineno = $1->lineno; 
 						}
-		| ID LPAREN RPAREN		{ $$ = $1;}
+		| id LPAREN RPAREN		{ $$ = $1;}
 		;	
 arg_lista	: arg_lista COMA expressao	{ YYSTYPE t = $1;
 						   if (t != NULL)
@@ -262,14 +301,20 @@ arg_lista	: arg_lista COMA expressao	{ YYSTYPE t = $1;
 						}	
 		| expressao			{ $$ = $1; }
 		;
-*/
+id	: ID 	{
+		  $$ = newExpNode(IdK);
+		  $$->attr.name = copyString(tokenString);
+		  $$->lineno = lineno; 
+		}
+	;
+
 %%
 
 int yyerror(char * message)
 { fprintf(listing,"Syntax error at line %d: %s\n",lineno,message);
   fprintf(listing,"Current token: ");
   printToken(yychar,tokenString);
-  Error = TRUE;
+  //Error = TRUE;
   return 0;
 }
 

@@ -8,6 +8,7 @@
 
 #include "globals.h"
 #include "util.h"
+#include "tiny.tab.h"
 
 /* Procedure printToken prints a token 
  * and its lexeme to the listing file
@@ -98,6 +99,52 @@ TreeNode * newExpNode(ExpKind kind)
   return t;
 }
 
+TreeNode * newDeclNode(DeclKind kind)
+{ TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+  int i;
+  if (t==NULL)
+    fprintf(listing,"Out of memory error at line %d\n",lineno);
+  else {
+    for (i=0;i<MAXCHILDREN;i++) t->child[i] = NULL;
+    t->sibling = NULL;
+    t->nodekind = DeclK;
+    t->kind.exp = kind;
+    t->lineno = lineno;
+    //t->type = Void;
+  }
+  return t;
+}
+
+TreeNode * newListNode(ListKind kind)
+{ TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+  int i;
+  if (t==NULL)
+    fprintf(listing,"Out of memory error at line %d\n",lineno);
+  else {
+    for (i=0;i<MAXCHILDREN;i++) t->child[i] = NULL;
+    t->sibling = NULL;
+    t->nodekind = ListK;
+    t->kind.exp = kind;
+    t->lineno = lineno;
+    //t->type = Void;
+  }
+  return t;
+}
+
+TreeNode * newErrNode(){
+
+	TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+    int i;
+
+	for (i=0;i<MAXCHILDREN;i++)
+		t->child[i] = NULL;
+	t->sibling = NULL;
+	t->nodekind = Error;
+	t->lineno = lineno;
+
+    return t;
+}
+
 /* Function copyString allocates and makes a new
  * copy of an existing string
  */
@@ -148,11 +195,14 @@ void printTree( TreeNode * tree )
         case AssignK:
           fprintf(listing,"Assign to: %s\n",tree->attr.name);
           break;
-        case VoidK:
-          fprintf(listing,"Void: %s\n",tree->attr.name);
+        case CmpdK:
+          fprintf(listing,"Cmpd: %s\n");
           break;
-        case IntK:
-          fprintf(listing,"Int\n");
+        case ReturnK:
+          fprintf(listing,"Return %s\n" );
+          break;
+        case ActivationK:
+          fprintf(listing,"%s\n", tree->attr.name);
           break;
         default:
           fprintf(listing,"Unknown ExpNode kind\n");
@@ -165,9 +215,15 @@ void printTree( TreeNode * tree )
           fprintf(listing,"Op: ");
           printToken(tree->attr.op,"\0");
           break;
+	case FactorK:
+		printf(listing, "Factor \n");
         case ConstK:
           fprintf(listing,"Const: %d\n",tree->attr.val);
           break;
+	case AdditiveK:
+		printf(listing, "Additive \n");
+	case SimpleK:
+		printf(listing, "Simple \n");
         case IdK:
           fprintf(listing,"Id: %s\n",tree->attr.name);
           break;

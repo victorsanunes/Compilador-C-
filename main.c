@@ -43,7 +43,7 @@ int TraceParse = TRUE;
 int TraceAnalyze = FALSE;
 int TraceCode = FALSE;
 
-int Error = FALSE;
+//int Error = FALSE;
 
 main( int argc, char * argv[] )
 { TreeNode * syntaxTree;

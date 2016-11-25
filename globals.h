@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include "tiny.tab.h"
 
 /* Yacc/Bison generates internally its own values
  * for the tokens. Other files can access these values
@@ -62,12 +63,16 @@ extern int lineno; /* source line number for listing */
 /***********   Syntax tree for parsing ************/
 /**************************************************/
 
-typedef enum {StmtK,ExpK} 				NodeKind;
-typedef enum {IfK,WhileK,AssignK, VoidK, ReturnK} 	StmtKind;
-typedef enum {OpK,ConstK,IdK, IntK} 			ExpKind;
+typedef enum {StmtK, DeclK, ExpK, ListK, Error} NodeKind;
+typedef enum {VarK, ParamK, FunK, TypeK} DeclKind;
+//typedef enum {DeclK, DeclVK} ParamKind; 
+typedef enum {IfK, WhileK, AssignK, CmpdK, ReturnK, ActivationK} StmtKind;
+typedef enum {OpK,ConstK,IdK, AdditiveK, SimpleK, TermK, FactorK} ExpKind;
+typedef enum {ParamsK, LocalK, StmtListK, AdditiveListK, TermListK, ArgsK} ListKind;
 
 /* ExpType is used for type checking */
-typedef enum {Void,Integer,Boolean} ExpType;
+typedef enum {Void, Int} ExpType;
+//typedef enum {Variavel, Funcao, Vetor} TipType; 
 
 #define MAXCHILDREN 3
 
@@ -76,11 +81,19 @@ typedef struct treeNode
      struct treeNode * sibling;
      int lineno;
      NodeKind nodekind;
-     union { StmtKind stmt; ExpKind exp;} kind;
+     ExpType type; 
+	char * escopo; 
+     union { 	StmtKind stmt; 
+		ExpKind exp;
+		DeclKind decl;
+		ListKind list; 
+	} kind;
      union { TokenType op;
              int val;
-             char * name; } attr;
-     ExpType type; /* for type checking of exps */
+             char * name; 
+		
+	} attr;
+     //ExpType type; /* for type checking of exps */
    } TreeNode;
 
 /**************************************************/
@@ -116,5 +129,5 @@ extern int TraceAnalyze;
 extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
-extern int Error; 
+//extern int Error; 
 #endif
