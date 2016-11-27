@@ -10,6 +10,7 @@
 #include "util.h"
 #include "tiny.tab.h"
 
+
 /* Procedure printToken prints a token 
  * and its lexeme to the listing file
  */
@@ -94,7 +95,7 @@ TreeNode * newExpNode(ExpKind kind)
     t->nodekind = ExpK;
     t->kind.exp = kind;
     t->lineno = lineno;
-    t->type = Void;
+    //t->type = Void;
   }
   return t;
 }
@@ -131,6 +132,7 @@ TreeNode * newListNode(ListKind kind)
   return t;
 }
 
+/*
 TreeNode * newErrNode(){
 
 	TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
@@ -144,7 +146,7 @@ TreeNode * newErrNode(){
 
     return t;
 }
-
+*/
 /* Function copyString allocates and makes a new
  * copy of an existing string
  */
@@ -196,10 +198,10 @@ void printTree( TreeNode * tree )
           fprintf(listing,"Assign to: %s\n",tree->attr.name);
           break;
         case CmpdK:
-          fprintf(listing,"Cmpd: %s\n");
+          fprintf(listing,"Cmpd: \n");
           break;
         case ReturnK:
-          fprintf(listing,"Return %s\n" );
+          fprintf(listing,"Return \n" );
           break;
         case ActivationK:
           fprintf(listing,"%s\n", tree->attr.name);

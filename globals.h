@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "tiny.tab.h"
+//#include "tiny.tab.h"
 
 /* Yacc/Bison generates internally its own values
  * for the tokens. Other files can access these values
@@ -46,7 +46,7 @@
 #endif
 
 /* MAXRESERVED = the number of reserved words */
-#define MAXRESERVED 8
+#define MAXRESERVED 6
 
 /* Yacc/Bison generates its own integer values
  * for tokens
@@ -63,7 +63,7 @@ extern int lineno; /* source line number for listing */
 /***********   Syntax tree for parsing ************/
 /**************************************************/
 
-typedef enum {StmtK, DeclK, ExpK, ListK, Error} NodeKind;
+typedef enum {StmtK, DeclK, ExpK, ListK} NodeKind;
 typedef enum {VarK, ParamK, FunK, TypeK} DeclKind;
 //typedef enum {DeclK, DeclVK} ParamKind; 
 typedef enum {IfK, WhileK, AssignK, CmpdK, ReturnK, ActivationK} StmtKind;
@@ -82,7 +82,6 @@ typedef struct treeNode
      int lineno;
      NodeKind nodekind;
      ExpType type; 
-	char * escopo; 
      union { 	StmtKind stmt; 
 		ExpKind exp;
 		DeclKind decl;
@@ -129,5 +128,5 @@ extern int TraceAnalyze;
 extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
-//extern int Error; 
+extern int Error; 
 #endif

@@ -1,13 +1,11 @@
-{ Sample program
-  in TINY language -
-  computes factorial
+int gcd (int u, int v)
+{	if (v == 0) return u ;
+	else return gcd(v,u-u/v*v);
+	/* u-u/v*v == u mod v */
 }
-read x; { input an integer }
-if 0 < x then { don't compute if x <= 0 }
-  fact := 1;
-  repeat
-    fact := fact * x;
-    x := x - 1
-  until x = 0;
-  write fact  { output factorial of x }
-end
+
+void main(void)
+{	int x; int y;
+	x = input(); y = input();
+	output(gcd(x,y));
+}

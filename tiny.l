@@ -29,25 +29,30 @@ whitespace  [ \t]+
 "return"        {return RETURN;}
 "void"          {return VOID;}
 "while"         {return WHILE;}
-"=="            {return EQ;}
-"="            	{return ASSIGN;}
-"!="            {return DIFERENT;}
-"<"             {return LT;}
-"<="           	{return MENOROUIGUAL;}
-">"             {return MT;}
-">="            {return MAIOROUIGUAL;}
+
 "+"             {return PLUS;}
 "-"             {return MINUS;}
 "*"             {return TIMES;}
 "/"             {return OVER;}
+
+"<"             {return LT;}
+"<="           	{return MENOROUIGUAL;}
+">"             {return MT;}
+">="            {return MAIOROUIGUAL;}
+"=="            {return EQ;}
+"!="            {return DIFERENT;}
+
+"="            	{return ASSIGN;}
+";"             {return SEMI;}
+","             {return COMA;}
+
 "("             {return LPAREN;}
 ")"             {return RPAREN;}
 "["             {return LCOLCHETE;}
 "]"             {return RCOLCHETE;}
 "{"             {return LCHAVE;}
 "}"             {return RCHAVE;}
-";"             {return SEMI;}
-","             {return COMA;}
+
 {number}        {return NUM;}
 {identifier}    {return ID;}
 {newline}       {lineno++;}

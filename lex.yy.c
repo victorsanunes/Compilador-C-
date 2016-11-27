@@ -386,10 +386,10 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[57] =
     {   0,
-        0,    0,   33,   31,   29,   28,   31,   18,   19,   16,
-       14,   25,   15,   17,   26,   24,   10,    8,   12,   27,
-       20,   21,   27,   27,   27,   27,   27,   22,   23,   29,
-        9,   30,   26,   11,    7,   13,   27,   27,    2,   27,
+        0,    0,   33,   31,   29,   28,   31,   20,   21,    9,
+        7,   19,    8,   10,   26,   18,   11,   17,   13,   27,
+       22,   23,   27,   27,   27,   27,   27,   24,   25,   29,
+       16,   30,   26,   12,   15,   14,   27,   27,    2,   27,
        27,   27,   27,   27,    3,   27,   27,   27,    1,   27,
         5,   27,   27,    6,    4,    0
     } ;
@@ -822,123 +822,123 @@ YY_RULE_SETUP
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 32 "tiny.l"
-{return EQ;}
+#line 33 "tiny.l"
+{return PLUS;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 33 "tiny.l"
-{return ASSIGN;}
+#line 34 "tiny.l"
+{return MINUS;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 34 "tiny.l"
-{return DIFERENT;}
+#line 35 "tiny.l"
+{return TIMES;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 35 "tiny.l"
-{return LT;}
+#line 36 "tiny.l"
+{return OVER;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 36 "tiny.l"
-{return MENOROUIGUAL;}
+#line 38 "tiny.l"
+{return LT;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 37 "tiny.l"
-{return MT;}
+#line 39 "tiny.l"
+{return MENOROUIGUAL;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 38 "tiny.l"
-{return MAIOROUIGUAL;}
+#line 40 "tiny.l"
+{return MT;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 39 "tiny.l"
-{return PLUS;}
+#line 41 "tiny.l"
+{return MAIOROUIGUAL;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 40 "tiny.l"
-{return MINUS;}
+#line 42 "tiny.l"
+{return EQ;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 41 "tiny.l"
-{return TIMES;}
+#line 43 "tiny.l"
+{return DIFERENT;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 42 "tiny.l"
-{return OVER;}
+#line 45 "tiny.l"
+{return ASSIGN;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 43 "tiny.l"
-{return LPAREN;}
+#line 46 "tiny.l"
+{return SEMI;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 44 "tiny.l"
-{return RPAREN;}
+#line 47 "tiny.l"
+{return COMA;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 45 "tiny.l"
-{return LCOLCHETE;}
+#line 49 "tiny.l"
+{return LPAREN;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 46 "tiny.l"
-{return RCOLCHETE;}
+#line 50 "tiny.l"
+{return RPAREN;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 47 "tiny.l"
-{return LCHAVE;}
+#line 51 "tiny.l"
+{return LCOLCHETE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 48 "tiny.l"
-{return RCHAVE;}
+#line 52 "tiny.l"
+{return RCOLCHETE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 49 "tiny.l"
-{return SEMI;}
+#line 53 "tiny.l"
+{return LCHAVE;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 50 "tiny.l"
-{return COMA;}
+#line 54 "tiny.l"
+{return RCHAVE;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 51 "tiny.l"
+#line 56 "tiny.l"
 {return NUM;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 52 "tiny.l"
+#line 57 "tiny.l"
 {return ID;}
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-#line 53 "tiny.l"
+#line 58 "tiny.l"
 {lineno++;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 55 "tiny.l"
+#line 60 "tiny.l"
 {/* skip whitespace */}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 56 "tiny.l"
+#line 61 "tiny.l"
 { char c;
 		int check = 0;
 
@@ -958,12 +958,12 @@ YY_RULE_SETUP
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 72 "tiny.l"
+#line 77 "tiny.l"
 {return ERROR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 74 "tiny.l"
+#line 79 "tiny.l"
 ECHO;
 	YY_BREAK
 #line 970 "lex.yy.c"
@@ -1967,7 +1967,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 74 "tiny.l"
+#line 79 "tiny.l"
 
 
 

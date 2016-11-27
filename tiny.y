@@ -12,7 +12,7 @@
 #include "scan.h"
 #include "parse.h"
 
-#define YYSTYPE TreeNode *
+#define YYSTYPE  TreeNode *
 static char * savedName; /* for use in assignments */
 static int savedLineNo;  /* ditto */
 static TreeNode * savedTree; /* stores syntax tree for later return */
@@ -21,44 +21,20 @@ static int yylex(void);
 
 %}
 
-%token IF
-%token THEN 
-%token ELSE 
-%token END 
-%token WHILE 
-%token VOID 
-%token RETURN 
-%token INT 
-%token ID 
-%token NUM 
-%token ASSIGN 
-%token LT 
-%token MT 
-%token EQ 
-%token DIFERENT 
-%token MENOROUIGUAL 
-%token MAIOROUIGUAL 
-%token LPAREN 
-%token RPAREN 
-%token LCOLCHETE 
-%token RCOLCHETE 
-%token LCHAVE 
-%token RCHAVE 
-%token SEMI 
-%token PLUS 
-%token MINUS 
-%token TIMES 
-%token OVER 
-%token COMA 
-%token ENDFILE
 %token ERROR 
+%token ID NUM 
+%token ELSE IF INT RETURN VOID WHILE
+%token PLUS MINUS TIMES OVER LT MENOROUIGUAL MT MAIOROUIGUAL EQ DIFERENT ASSIGN SEMI COMA LPAREN RPAREN LCOLCHETE RCOLCHETE LCHAVE RCHAVE
+
+%nonassoc LOWER_THAN_ELSE
+%nonassoc ELSE
 
 %% /* Grammar for C- */
 
 programa	: declaracao_lista { savedTree = $1; }
 		;
 declaracao_lista    : declaracao_lista declaracao
-                 { YYSTYPE t = $1;
+                 { YYSTYPE  t = $1;
                    if (t != NULL)
                    { while (t->sibling != NULL)
                         t = t->sibling;
@@ -70,7 +46,7 @@ declaracao_lista    : declaracao_lista declaracao
             ;
 declaracao	: var_declaracao	{ $$ = $1; }
 		| fun_declaracao	{ $$ = $1; } 		
-            	//| error  		{ $$ = NULL; }
+            	| error  		{ $$ = NULL; }
             	;
 var_declaracao	: tipo_especificador id SEMI	{ $$ = newDeclNode(VarK);
 						  $$->type = $1->type;
@@ -103,7 +79,7 @@ params	: param_lista 	{ $$ = $1; }
 	| VOID		{ $$ = NULL; }
 	;
 param_lista	: param_lista COMA param 	{  
-                 				  YYSTYPE t = $1;
+                 				  YYSTYPE  t = $1;
 						   if (t != NULL)
 						   { while (t->sibling != NULL)
 							t = t->sibling;
@@ -123,7 +99,7 @@ param	: tipo_especificador id 			{ $$ = newDeclNode(ParamK);
 							  $$->lineno = $2->lineno; 
 							}
 	;
-composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ YYSTYPE t = $2;
+composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ YYSTYPE  t = $2;
 									   if (t != NULL)
 									   { while (t->sibling != NULL)
 										t = t->sibling;
@@ -132,21 +108,9 @@ composto_decl	: LCHAVE local_declaracoes statement_lista RCHAVE	{ YYSTYPE t = $2
 									     else $$ = $3;
 									 }			
 		;
-/*composto_decl :   LCHAVE RCHAVE
-                  { $$ = NULL;}
-            |  LCHAVE local_declaracoes RCHAVE
-                  { $$ = $2;}
-            | LCHAVE statement_lista RCHAVE
-                  { $$ = $2;}
-            | LCHAVE local_declaracoes statement_lista RCHAVE
-                 { $$ = $2;
-                   $$->child[0] = $3;
-                 }
-            ;
-*/
 local_declaracoes	: { $$ = NULL; }
 		   	| local_declaracoes var_declaracao
-							{ YYSTYPE t = $1;
+							{ YYSTYPE  t = $1;
 							  if (t != NULL)
 							    { while (t->sibling != NULL)
 							      t = t->sibling;
@@ -157,7 +121,7 @@ local_declaracoes	: { $$ = NULL; }
             ;
 statement_lista : { $$ = NULL; }
 		| statement_lista statement
-{ YYSTYPE t = $1;
+{ YYSTYPE  t = $1;
   if (t != NULL)
     { while (t->sibling != NULL)
       t = t->sibling;
@@ -171,13 +135,13 @@ statement		: expressao_decl	{ $$ = $1; }
 			| selecao_decl		{ $$ = $1; }
 			| iteracao_decl		{ $$ = $1; }
 			| retorno_decl		{ $$ = $1; }
-			//| error 		{ $$ = NULL; }
+			| error 		{ $$ = NULL; }
 			;
 expressao_decl		: expressao SEMI	{ $$ = $1; }
 			| SEMI			{ $$ = NULL; }
 			;
 
-selecao_decl     : IF LPAREN expressao RPAREN statement /*%precLOWER_THAN_ELSE*/
+selecao_decl     : IF LPAREN expressao RPAREN statement %prec LOWER_THAN_ELSE
                  { $$ = newStmtNode(IfK);
                    $$->child[0] = $3;
                    $$->child[1] = $5;
@@ -204,10 +168,6 @@ retorno_decl	: RETURN SEMI		{ $$ =  newStmtNode(ReturnK);
 					  //$$->tipo = tipoFun;
 					}
 		;
-/*continua_decl	: composto_decl { $$ = $1; }
-		| statement {$$ = $1; }
-		;
-*/
 expressao	: var ASSIGN expressao	{ $$ = newExpNode(AssignK); 
 					  $$->child[0] = $1;
 					  $$->attr.op = ASSIGN;
@@ -290,8 +250,9 @@ ativacao	: id LPAREN arg_lista RPAREN	{ $$ = newStmtNode(ActivationK);
 						  $$->lineno = $1->lineno; 
 						}
 		| id LPAREN RPAREN		{ $$ = $1;}
-		;	
-arg_lista	: arg_lista COMA expressao	{ YYSTYPE t = $1;
+		;
+	
+arg_lista	: arg_lista COMA expressao	{ YYSTYPE  t = $1;
 						   if (t != NULL)
 						   { while (t->sibling != NULL)
 							t = t->sibling;
