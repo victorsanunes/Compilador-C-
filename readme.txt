@@ -1,5 +1,5 @@
-flex tiny.l
-bison -d tiny.y
+flex cminus.l
+bison -d cminus.y
 gcc -c *.c
-gcc -o tiny *.o -ly -lfl
+gcc -o cminus *.o -ly -lfl
 
