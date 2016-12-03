@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.2.  */
+/* A Bison parser, made by GNU Bison 3.0.4.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_TINY_TAB_H_INCLUDED
-# define YY_YY_TINY_TAB_H_INCLUDED
+#ifndef YY_YY_CMINUS_TAB_H_INCLUDED
+# define YY_YY_CMINUS_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,27 +45,34 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    IF = 258,
-    THEN = 259,
-    ELSE = 260,
-    END = 261,
-    REPEAT = 262,
-    UNTIL = 263,
-    READ = 264,
-    WRITE = 265,
-    ID = 266,
-    NUM = 267,
-    ASSIGN = 268,
-    EQ = 269,
-    LT = 270,
-    PLUS = 271,
-    MINUS = 272,
-    TIMES = 273,
-    OVER = 274,
-    LPAREN = 275,
-    RPAREN = 276,
-    SEMI = 277,
-    ERROR = 278
+    ERROR = 258,
+    ID = 259,
+    NUM = 260,
+    ELSE = 261,
+    IF = 262,
+    INT = 263,
+    RETURN = 264,
+    VOID = 265,
+    WHILE = 266,
+    PLUS = 267,
+    MINUS = 268,
+    TIMES = 269,
+    OVER = 270,
+    LT = 271,
+    MENOROUIGUAL = 272,
+    MT = 273,
+    MAIOROUIGUAL = 274,
+    EQ = 275,
+    DIFERENT = 276,
+    ASSIGN = 277,
+    SEMI = 278,
+    COMA = 279,
+    LPAREN = 280,
+    RPAREN = 281,
+    LCOLCHETE = 282,
+    RCOLCHETE = 283,
+    LCHAVE = 284,
+    RCHAVE = 285
   };
 #endif
 
@@ -81,4 +88,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_TINY_TAB_H_INCLUDED  */
+#endif /* !YY_YY_CMINUS_TAB_H_INCLUDED  */

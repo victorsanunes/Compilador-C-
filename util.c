@@ -1,102 +1,68 @@
-/****************************************************/
-/* File: util.c                                     */
-/* Utility function implementation                  */
-/* for the TINY compiler                            */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
-#include "globals.h"
+#include "global.h"
 #include "util.h"
+#include "cminus.tab.h"
 
-/* Procedure printToken prints a token 
- * and its lexeme to the listing file
- */
-void printToken( TokenType token, const char* tokenString )
-{ switch (token)
-  { case IF:
-    case INT:
-    case ELSE:
-    case RETURN:
-    case VOID:
-    case WHILE:
-    fprintf(listing,
-         "reserved word: %s\n",tokenString);
-      break;
-    case ASSIGN: fprintf(listing,"=\n"); break;
-    case LT: fprintf(listing,"<\n"); break;
-    case MT: fprintf(listing,">\n"); break;
-    case EQ: fprintf(listing,"==\n"); break;
-    case DIFERENT: fprintf(listing,"!=\n"); break;
-    case MENOROUIGUAL: fprintf(listing,"<=\n"); break;
-    case MAIOROUIGUAL: fprintf(listing,">=\n"); break;
-    case LPAREN: fprintf(listing,"(\n"); break;
-    case RPAREN: fprintf(listing,")\n"); break;
-    case LCOLCHETE: fprintf(listing,"[\n"); break;
-    case RCOLCHETE: fprintf(listing,"]\n"); break;
-    case LCHAVE: fprintf(listing,"{\n"); break;
-    case RCHAVE: fprintf(listing,"}\n"); break;
-    case SEMI: fprintf(listing,";\n"); break;
-    case PLUS: fprintf(listing,"+\n"); break;
-    case MINUS: fprintf(listing,"-\n"); break;
-    case TIMES: fprintf(listing,"*\n"); break;
-    case OVER: fprintf(listing,"/\n"); break;
-    case COMA: fprintf(listing,",\n"); break;
-    case ENDFILE: fprintf(listing,"EOF\n"); break;
+TreeNode * newStmtNode(StmtKind kind){
 
-    case NUM:
-      fprintf(listing,
-          "NUM, val= %s\n",tokenString);
-      break;
-    case ID:
-      fprintf(listing,
-          "ID, name= %s\n",tokenString);
-      break;
-    case ERROR:
-      fprintf(listing,
-          "ERROR: %s\n",tokenString);
-      break;
-    default: /* should never happen */
-      fprintf(listing,"Unknown token: %d\n",token);
-  }
+	TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+    	int i;
+
+	for (i=0;i<MAXCHILDREN;i++)
+		t->child[i] = NULL;
+	t->sibling = NULL;
+	t->nodekind = Stmt;
+	t->kind.stmt = kind;
+	t->lineno = lineno;
+
+    return t;
 }
 
-/* Function newStmtNode creates a new statement
- * node for syntax tree construction
- */
-TreeNode * newStmtNode(StmtKind kind)
-{ TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
-  int i;
-  if (t==NULL)
-    fprintf(listing,"Out of memory error at line %d\n",lineno);
-  else {
-    for (i=0;i<MAXCHILDREN;i++) t->child[i] = NULL;
-    t->sibling = NULL;
-    t->nodekind = StmtK;
-    t->kind.stmt = kind;
-    t->lineno = lineno;
-  }
-  return t;
+TreeNode * newExpNode(ExpKind kind){
+	
+	TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+    int i;
+
+	for (i=0;i<MAXCHILDREN;i++)
+		t->child[i] = NULL;
+	t->sibling = NULL;
+	t->nodekind = Exp;
+	t->kind.exp = kind;
+	t->lineno = lineno;
+
+    return t;
 }
 
-/* Function newExpNode creates a new expression 
- * node for syntax tree construction
- */
-TreeNode * newExpNode(ExpKind kind)
-{ TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
-  int i;
-  if (t==NULL)
-    fprintf(listing,"Out of memory error at line %d\n",lineno);
-  else {
-    for (i=0;i<MAXCHILDREN;i++) t->child[i] = NULL;
-    t->sibling = NULL;
-    t->nodekind = ExpK;
-    t->kind.exp = kind;
-    t->lineno = lineno;
-    t->type = Void;
-  }
-  return t;
+TreeNode * newDeclNode(DeclKind kind){
+	
+	TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+    int i;
+
+	for (i=0;i<MAXCHILDREN;i++)
+		t->child[i] = NULL;
+	t->sibling = NULL;
+	t->nodekind = Decl;
+	t->kind.decl = kind;
+	t->lineno = lineno;
+
+   return t;
 }
+
+/*TreeNode * newListNode(ListKind kind){
+	
+	TreeNode * t = (TreeNode *) malloc(sizeof(TreeNode));
+    int i;
+
+	for (i=0;i<MAXCHILDREN;i++)
+		t->child[i] = NULL;
+	t->sibling = NULL;
+	t->nodekind = ListK;
+	t->kind.list = kind;
+	t->lineno = lineno;
+
+    return t;
+}*/
+
+
 
 /* Function copyString allocates and makes a new
  * copy of an existing string
@@ -108,10 +74,14 @@ char * copyString(char * s)
   n = strlen(s)+1;
   t = malloc(n);
   if (t==NULL)
-    fprintf(listing,"Out of memory error at line %d\n",lineno);
+    printf("Out of memory error at line %d\n",lineno);
   else strcpy(t,s);
   return t;
 }
+
+
+/* =========================== IMPRESSAO DA ARVORE SINTATICA ============================= */
+
 
 /* Variable indentno is used by printTree to
  * store current number of spaces to indent
@@ -126,60 +96,163 @@ static indentno = 0;
 static void printSpaces(void)
 { int i;
   for (i=0;i<indentno;i++)
-    fprintf(listing," ");
+    printf(" ");
 }
 
 /* procedure printTree prints a syntax tree to the 
  * listing file using indentation to indicate subtrees
  */
-void printTree( TreeNode * tree )
-{ int i;
-  INDENT;
-  while (tree != NULL) {
-    printSpaces();
-    if (tree->nodekind==StmtK)
-    { switch (tree->kind.stmt) {
-        case IfK:
-          fprintf(listing,"If\n");
-          break;
-        case RepeatK:
-          fprintf(listing,"Repeat\n");
-          break;
-        case AssignK:
-          fprintf(listing,"Assign to: %s\n",tree->attr.name);
-          break;
-        case ReadK:
-          fprintf(listing,"Read: %s\n",tree->attr.name);
-          break;
-        case WriteK:
-          fprintf(listing,"Write\n");
-          break;
-        default:
-          fprintf(listing,"Unknown ExpNode kind\n");
-          break;
-      }
+ 
+void printTree( TreeNode * tree ){
+    int i;
+    INDENT;
+    while (tree != NULL) {
+        printSpaces();
+        if (tree->nodekind==Stmt){
+            switch (tree->kind.stmt){
+                case If:
+                    printf("if\n");
+                    break;
+                case Iter:
+                    printf("while\n");
+                    break;
+                case Attr:
+                    printf("=\n");
+                    break;
+                /*case Cmpd:
+                    printf("Cmpd\n");
+                    break;*/
+                case Return:
+                    printf("return\n");
+                    break;
+                case Ativacao:
+                    printf("%s\n",tree->attr.name);
+                    break;
+                default:
+                    printf("Unknown ExpNode kind\n");
+                    break;
+            }
+        } else if (tree->nodekind==Exp){
+            switch (tree->kind.exp){
+                /*case Factor:
+                    printf("Factor\n");
+                    break;*/
+                case Const:
+                    printf("%d\n",tree->attr.val);
+                    break;
+                /*case Additive:
+                    printf("Additive\n");
+                    break;
+                case Simple:
+                    printf("Simple\n");
+                    break;*/
+                case Id:
+                    printf("%s\n",tree->attr.name);
+                    break;
+                case Term:
+                    printf("Term\n");
+                    break;
+                case Op:
+                    //printf("Op\n");
+			switch(tree->attr.op){
+				case ASSIGN: printf("=");
+				break;
+
+				case MENOROUIGUAL: printf("<=");
+				break;
+
+				case LT: printf("<");
+				break;
+
+				case MAIOROUIGUAL: printf(">=");
+				break;
+
+				case MT: printf(">");
+				break;
+
+				case EQ: printf("==");
+				break;
+
+				case DIFERENT: printf("!=");
+				break;
+
+				case PLUS: printf("+");
+				break;
+
+				case MINUS: printf("-");
+				break;
+
+				case TIMES: printf("*");
+				break;
+
+				case OVER: printf("/");
+				break;
+			}
+		    printf("\n");
+                    break;
+                default:
+                    printf("Unknown ExpNode kind\n");
+                    break;
+            }
+        } else if (tree->nodekind==Decl){
+            switch (tree->kind.decl){
+                case Var:
+                    printf("int %s\n",tree->attr.name);
+                    break;
+                case Fun:
+			switch(tree->type){
+				case Void:
+					printf("void ");
+					break;
+				case Int:
+					printf("int ");
+					break;
+			}
+                    printf("%s\n",tree->attr.name);
+                    break;
+                case Param:
+                    printf("%s\n",tree->attr.name);
+                    break;
+                case Type:
+                    printf("Type\n");
+                    break;
+                default:
+                    printf("Unknown ExpNode kind\n");
+                    break;
+            }
+        } /*else if (tree->nodekind==ListK){
+            switch (tree->kind.list){
+                case Params:
+                    printf("Params\n");
+                    break;
+                case Local:
+                    printf("Local\n");
+                    break;
+                case StmtList:
+                    printf("StmtList\n");
+                    break;
+                case AdditiveList:
+                    printf("AdditiveList\n");
+                    break;
+                case TermList:
+                    printf("TermList\n");
+                    break;
+                case Args:
+                    printf("Args\n");
+                    break;
+                default:
+                    printf("Unknown ExpNode kind\n");
+                    break;
+            }
+        } */else {
+            printf("Unknown node kind\n");
+        }
+
+        for (i=0;i<MAXCHILDREN;i++)
+            printTree(tree->child[i]);
+
+        tree = tree->sibling;
     }
-    else if (tree->nodekind==ExpK)
-    { switch (tree->kind.exp) {
-        case OpK:
-          fprintf(listing,"Op: ");
-          printToken(tree->attr.op,"\0");
-          break;
-        case ConstK:
-          fprintf(listing,"Const: %d\n",tree->attr.val);
-          break;
-        case IdK:
-          fprintf(listing,"Id: %s\n",tree->attr.name);
-          break;
-        default:
-          fprintf(listing,"Unknown ExpNode kind\n");
-          break;
-      }
-    }
-    else fprintf(listing,"Unknown node kind\n");
-    for (i=0;i<MAXCHILDREN;i++)
-         printTree(tree->child[i]);
-    tree = tree->sibling;
-  }
-  UNINDENT;
+
+    UNINDENT;
 }
