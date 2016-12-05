@@ -38,11 +38,13 @@ extern int lineno;	/* Número da linha */
 /**************************************************/
 
 
-typedef enum {Stmt, Exp, Decl, /*ListK, Error*/} NodeKind;
-typedef enum {If, Iter, Attr, /*Cmpd,*/ Return, Ativacao} StmtKind;
-typedef enum {/*Factor, */Const, /*Additive, Simple, */Id, Term, Op} ExpKind;
-typedef enum {Var, Fun, Param, Type} DeclKind;
+typedef enum {Stmt, Exp, DeclKi, Param/*ListK, Error*/} NodeKind;
+typedef enum {If, Iter, Attr, /*Cmpd,*/ Return, Ativacao, Coun} StmtKind;
+typedef enum {Decl, DeclV} ParamKind;
+typedef enum {Variavel, Equal, Vetor, Call, Unary, /*Factor, */Const, /*Additive, Simple, */Id/*, Term*/, Op} ExpKind;
+typedef enum {Var, Vet, Fun/*, Param, Type*/} DeclKind;
 //typedef enum {Params, Local, StmtList, AdditiveList, TermList, Args} ListKind;
+
 
 /* Usado para checagem de tipo */
 typedef enum {Void,Int} ExpType;
@@ -55,17 +57,23 @@ typedef struct treeNode{
     struct treeNode * child[MAXCHILDREN];
     struct treeNode * sibling;
 	
+	ExpType type;
+    NodeKind nodekind;
     int lineno;
-    
-    union { StmtKind stmt; ExpKind exp; DeclKind decl; /*ListKind list;*/ } kind;
+ 	char * escopo;    
+
+    union { StmtKind stmt; 
+			ExpKind exp; 
+			DeclKind decl;
+			ParamKind param;  
+			/*ListKind list;*/ } kind;
     union {
 		TokenType op;
             	int val;
             	char * name;	
 	} attr;
 	
-    ExpType type;
-    NodeKind nodekind;
+
 	
 } TreeNode;
 #endif
