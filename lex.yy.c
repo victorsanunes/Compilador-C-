@@ -386,12 +386,12 @@ struct yy_trans_info
 	};
 static yyconst flex_int16_t yy_accept[57] =
     {   0,
-        0,    0,   33,   31,   29,   28,   31,   20,   21,    9,
-        7,   19,    8,   10,   26,   18,   11,   17,   13,   27,
-       22,   23,   27,   27,   27,   27,   27,   24,   25,   29,
-       16,   30,   26,   12,   15,   14,   27,   27,    2,   27,
-       27,   27,   27,   27,    3,   27,   27,   27,    1,   27,
-        5,   27,   27,    6,    4,    0
+        0,    0,   33,   31,   28,   27,   31,   18,   19,   17,
+       15,    8,   16,   30,   25,   24,   13,    7,   14,   26,
+       20,   21,   26,   26,   26,   26,   26,   22,   23,   28,
+       12,   29,   25,   26,   10,    9,   11,   26,    1,   26,
+       26,   26,   26,   26,    3,   26,   26,   26,    2,   26,
+        5,   26,   26,    6,    4,    0
     } ;
 
 static yyconst YY_CHAR yy_ec[256] =
@@ -429,7 +429,7 @@ static yyconst YY_CHAR yy_ec[256] =
 static yyconst YY_CHAR yy_meta[36] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    2,    1,    1,    2,
+        1,    2,    1,    1,    1,    1,    2,    1,    1,    2,
         2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
         2,    2,    2,    1,    1
     } ;
@@ -439,7 +439,7 @@ static yyconst flex_uint16_t yy_base[58] =
         0,    0,   64,   65,   61,   65,   47,   65,   65,   65,
        65,   65,   65,   54,   48,   65,   44,   43,   42,    0,
        65,   65,   31,   14,   34,   27,   30,   65,   65,   50,
-       65,   65,   39,   65,   65,   65,    0,   21,    0,   19,
+       65,   65,   39,    0,   65,   65,   65,   21,    0,   19,
        18,   23,   22,   24,    0,   13,   23,   17,    0,   13,
         0,   18,   12,    0,    0,   65,   35
     } ;
@@ -447,9 +447,9 @@ static yyconst flex_uint16_t yy_base[58] =
 static yyconst flex_int16_t yy_def[58] =
     {   0,
        56,    1,   56,   56,   56,   56,   56,   56,   56,   56,
-       56,   56,   56,   56,   56,   56,   56,   56,   56,   57,
+       56,   56,   56,   56,   57,   56,   56,   56,   56,   57,
        56,   56,   57,   57,   57,   57,   57,   56,   56,   56,
-       56,   56,   56,   56,   56,   56,   57,   57,   57,   57,
+       56,   56,   57,   57,   56,   56,   56,   57,   57,   57,
        57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
        57,   57,   57,   57,   57,    0,   56
     } ;
@@ -459,9 +459,9 @@ static yyconst flex_uint16_t yy_nxt[101] =
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
        14,   15,   16,   17,   18,   19,   20,   21,   22,   20,
        23,   20,   20,   24,   20,   20,   20,   25,   20,   20,
-       20,   26,   27,   28,   29,   39,   37,   55,   54,   40,
+       20,   26,   27,   28,   29,   39,   34,   55,   54,   40,
        53,   52,   51,   50,   49,   48,   47,   46,   45,   44,
-       33,   30,   43,   42,   41,   38,   36,   35,   34,   33,
+       33,   30,   43,   42,   41,   38,   37,   36,   35,   33,
        32,   31,   30,   56,    3,   56,   56,   56,   56,   56,
        56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
        56,   56,   56,   56,   56,   56,   56,   56,   56,   56,
@@ -498,17 +498,21 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "cminus.l"
-#line 2 "cminus.l"
-#include "cminus.tab.h"
-#include "string.h"
-//#include "tabsimbolos.h"
-#include "global.h"
+#line 1 "cmenos.l"
+#line 2 "cmenos.l"
+
+#include "globals.h"
 #include "scan.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include "cmenos.tab.h"
+
 
 char tokenString[MAXTOKENLEN+1];
-
-#line 512 "lex.yy.c"
+extern YYSTYPE yylval;
+void erroLexico(char *);
+#line 516 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -726,10 +730,10 @@ YY_DECL
 		}
 
 	{
-#line 19 "cminus.l"
+#line 23 "cmenos.l"
 
 
-#line 733 "lex.yy.c"
+#line 737 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -788,182 +792,180 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 21 "cminus.l"
-{ return ELSE; }
+#line 25 "cmenos.l"
+{return IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 22 "cminus.l"
-{ return IF; }
+#line 26 "cmenos.l"
+{return ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 23 "cminus.l"
-{ return INT; }
+#line 27 "cmenos.l"
+{return INT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 24 "cminus.l"
-{ return RETURN; }
+#line 28 "cmenos.l"
+{return RETURN;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 25 "cminus.l"
-{ return VOID; }
+#line 29 "cmenos.l"
+{return VOID;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 26 "cminus.l"
-{ return WHILE; }
+#line 30 "cmenos.l"
+{return WHILE;}   
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 28 "cminus.l"
-{ return PLUS; }
+#line 31 "cmenos.l"
+{return ATTR;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 29 "cminus.l"
-{ return MINUS; }
+#line 32 "cmenos.l"
+{return COMA;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 30 "cminus.l"
-{ return TIMES; }
+#line 33 "cmenos.l"
+{return EQ;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 31 "cminus.l"
-{ return OVER; }
+#line 34 "cmenos.l"
+{return MENOROUIGUAL;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 32 "cminus.l"
-{ return LT; }
+#line 35 "cmenos.l"
+{return MAIOROUIGUAL;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 33 "cminus.l"
-{ return MENOROUIGUAL; }
+#line 36 "cmenos.l"
+{return DIFERENTE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 34 "cminus.l"
-{ return MT; }
+#line 37 "cmenos.l"
+{return MENOR;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 35 "cminus.l"
-{ return MAIOROUIGUAL; }
+#line 38 "cmenos.l"
+{return MAIOR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 36 "cminus.l"
-{ return EQ; }
+#line 39 "cmenos.l"
+{return MAIS;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 37 "cminus.l"
-{ return DIFERENT; }
+#line 40 "cmenos.l"
+{return MENOS;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 38 "cminus.l"
-{ return ASSIGN; }
+#line 41 "cmenos.l"
+{return VEZES;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 39 "cminus.l"
-{ return SEMI; }
+#line 42 "cmenos.l"
+{return LPAREN;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 40 "cminus.l"
-{ return COMA; }
+#line 43 "cmenos.l"
+{return RPAREN;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 41 "cminus.l"
-{ return LPAREN; }
+#line 44 "cmenos.l"
+{return LCOLCHETE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 42 "cminus.l"
-{ return RPAREN; }
+#line 45 "cmenos.l"
+{return RCOLCHETE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 43 "cminus.l"
-{ return LCOLCHETE; }
+#line 46 "cmenos.l"
+{return LCHAVE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 44 "cminus.l"
-{ return RCOLCHETE; }
+#line 47 "cmenos.l"
+{return RCHAVE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 45 "cminus.l"
-{ return LCHAVE; }
+#line 48 "cmenos.l"
+{return SEMI;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 46 "cminus.l"
-{ return RCHAVE; }
+#line 50 "cmenos.l"
+{return NUM;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 48 "cminus.l"
-{ return NUM; }
+#line 51 "cmenos.l"
+{return ID;}
 	YY_BREAK
 case 27:
+/* rule 27 can match eol */
 YY_RULE_SETUP
-#line 49 "cminus.l"
-{ return ID; }
+#line 52 "cmenos.l"
+{lineno++;}
 	YY_BREAK
 case 28:
-/* rule 28 can match eol */
 YY_RULE_SETUP
-#line 50 "cminus.l"
-{ lineno ++; }
+#line 53 "cmenos.l"
+{/* skip whitespace */}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 51 "cminus.l"
-{/* ignora espacos em branco */}
+#line 54 "cmenos.l"
+{ char c;
+		   int verifica = 0;
+                  do
+                  { c = input();
+                    if (c == EOF) break;
+                    if (c == '\n') lineno++;
+		    if (c == '*'){
+			c = input ();
+			if (c == '/'){
+			   verifica = 1;
+				}
+    		   }	
+                  } while (!verifica);
+		  
+                }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 53 "cminus.l"
-{ int e=0,c;
-		  do{
-			c = input();
-			if ((c == '/') && (e == 1)){
-				e=2;
-			}else if (c == EOF)
-				 break;
-
-			else if (c == '\n')
-				 lineno++;
-			
-			else if (c == '*') 
-				e=1; 
-			else 
-				e=0;			
-		 } while (e < 2);
-                }
+#line 69 "cmenos.l"
+{return BARRA;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 70 "cminus.l"
-{ return ERROR; }
+#line 70 "cmenos.l"
+{return ERROR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 72 "cminus.l"
+#line 72 "cmenos.l"
 ECHO;
 	YY_BREAK
-#line 967 "lex.yy.c"
+#line 969 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1964,23 +1966,26 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 72 "cminus.l"
+#line 72 "cmenos.l"
+
 
 
 
 TokenType getToken(void){
-
-	static int firstTime = TRUE;
-	TokenType currentToken;
-
-	if (firstTime){
-		firstTime = FALSE;
-		lineno++;
-		yyin = source;
-	}
-
-	currentToken = yylex();
-	strncpy(tokenString,yytext,MAXTOKENLEN);
-	return currentToken;
+  static int firstTime = TRUE;
+  TokenType currentToken;
+  if (firstTime){
+    firstTime = FALSE;
+    lineno++;
+    yyin = source;
+    yyout = listing;
+  }
+  currentToken = yylex();
+  strncpy(tokenString,yytext,MAXTOKENLEN);
+  if (TraceScan) {
+    fprintf(listing,"\t%d: ",lineno);
+    printToken(currentToken,tokenString);
+  }
+  return currentToken;
 }
 

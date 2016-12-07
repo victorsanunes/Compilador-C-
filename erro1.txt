@@ -1,0 +1,7 @@
+/*Erro 1: Variavel nao declarada*/
+
+void main(void){
+	int a;
+	a = 0;
+	b = a;  
+}

@@ -1,0 +1,6 @@
+/*Erro 5: chamada de funcao nao declarada*/
+
+void main(void){
+	int a;
+	a = gcd(); 
+}

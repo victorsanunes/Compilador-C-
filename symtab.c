@@ -1,16 +1,7 @@
-/****************************************************/
-/* Arquivo: symtab.c                                */
-/* Implementação da tabela de símbolos para o compilador Cminus*/
-/* Compiler Construction:                           */
-/* Eliseu Júnio Araújo                              */
-/****************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "symtab.h"
-#include "global.h"
-
 
 /* SIZE is the size of the hash table */
 #define SIZE 211
@@ -147,31 +138,27 @@ TipType st_lookupTipoId ( char * name )
  * to the listing file
  */
 void printSymTab(FILE * listing)
-{
-    int i;
-    fprintf(listing,"Variable Name  Location   tipo  tipoID       Escopo         Line Numbers\n");
-    fprintf(listing,"-------------  --------   ----  ------    -------------     ------------\n");
+{ int i;
+    fprintf(listing,"Nome id  Entrada   Tipo Dado  tipoID       Escopo         Numero linha\n");
+    fprintf(listing,"-------  -------   ---------  ------    -------------     ------------\n");
     for (i=0; i<SIZE; ++i)
-    {
-        if (hashTable[i] != NULL)
-        {
-            BucketList l = hashTable[i];
+    {if (hashTable[i] != NULL)
+        { BucketList l = hashTable[i];
             while (l != NULL)
-            {
-                LineList t = l->lines;
+            {   LineList t = l->lines;
                 fprintf(listing,"%-14s ",l->name2);
                 fprintf(listing,"%-8d  ",l->memloc);
                 if(l->tipo==Integer)
                 {
-                    fprintf(listing," INT   ");
+                    fprintf(listing,"INT   ");
                 }
                 else if(l->tipo==Void)
                 {
-                    fprintf(listing," VOID  ");
+                    fprintf(listing,"VOID  ");
                 }
                 else if(l->tipo==Boolean)
                 {
-                    fprintf(listing," BOOL  ");
+                    fprintf(listing,"BOOL  ");
                 }
                 if(l->tipoId==Funcao)
                 {

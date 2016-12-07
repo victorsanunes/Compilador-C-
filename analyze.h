@@ -1,10 +1,3 @@
-/****************************************************/
-/* Arquivo: analyze.h                               */
-/* Interface do analisador semântico para Cminus    */
-/* Compiler Construction:                           */
-/* Eliseu Júnio Araújo                              */
-/****************************************************/
-
 #ifndef _ANALYZE_H_
 #define _ANALYZE_H_
 

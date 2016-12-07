@@ -1,0 +1,15 @@
+/*Erro 2: Atribuicao invalida. */
+
+void gcd(int u, int v){ 
+	if (v==0) 
+		u = 0; 
+}
+  
+void main(void){ 
+	int x; int y; int u; 
+  	x = input(); 
+	y = input();
+	u = gcd(x, y);
+ 
+}
+

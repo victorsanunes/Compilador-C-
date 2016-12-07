@@ -1,0 +1,11 @@
+/*Erro 7: Variavel com mesmo nome de funcao*/
+
+void xyz(void){
+	int a;
+	int b;
+}
+
+void main(void){
+	int xyz;
+	xyz = 1;
+}

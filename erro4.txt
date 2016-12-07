@@ -1,0 +1,7 @@
+/*Erro 4: Dupla declaracao de variavel*/
+
+void main(void){
+	int a;
+	int a; 
+	a = 1;
+}

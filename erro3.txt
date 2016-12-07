@@ -1,0 +1,6 @@
+/*Erro 3: Declaracao invalida de variavel*/
+
+void main(void){
+	void a;
+	a = 1; 
+}

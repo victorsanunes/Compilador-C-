@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_CMINUS_TAB_H_INCLUDED
-# define YY_YY_CMINUS_TAB_H_INCLUDED
+#ifndef YY_YY_CMENOS_TAB_H_INCLUDED
+# define YY_YY_CMENOS_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,34 +45,34 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    ERROR = 258,
-    ID = 259,
-    NUM = 260,
-    ELSE = 261,
-    IF = 262,
-    INT = 263,
-    RETURN = 264,
-    VOID = 265,
-    WHILE = 266,
-    PLUS = 267,
-    MINUS = 268,
-    TIMES = 269,
-    OVER = 270,
-    LT = 271,
-    MENOROUIGUAL = 272,
-    MT = 273,
+    ID = 258,
+    NUM = 259,
+    ELSE = 260,
+    IF = 261,
+    INT = 262,
+    RETURN = 263,
+    VOID = 264,
+    WHILE = 265,
+    MAIS = 266,
+    MENOS = 267,
+    VEZES = 268,
+    BARRA = 269,
+    ATTR = 270,
+    COMA = 271,
+    EQ = 272,
+    MENOROUIGUAL = 273,
     MAIOROUIGUAL = 274,
-    EQ = 275,
-    DIFERENT = 276,
-    ASSIGN = 277,
-    SEMI = 278,
-    COMA = 279,
-    LPAREN = 280,
-    RPAREN = 281,
-    LCOLCHETE = 282,
-    RCOLCHETE = 283,
-    LCHAVE = 284,
-    RCHAVE = 285
+    DIFERENTE = 275,
+    MAIOR = 276,
+    MENOR = 277,
+    LPAREN = 278,
+    RPAREN = 279,
+    LCOLCHETE = 280,
+    RCOLCHETE = 281,
+    LCHAVE = 282,
+    RCHAVE = 283,
+    SEMI = 284,
+    ERROR = 285
   };
 #endif
 
@@ -88,4 +88,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_CMINUS_TAB_H_INCLUDED  */
+#endif /* !YY_YY_CMENOS_TAB_H_INCLUDED  */

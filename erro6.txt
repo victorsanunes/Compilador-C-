@@ -1,0 +1,6 @@
+/*Erro 6: Funcao main() nao declarada*/
+
+void funcao1(void){
+	int x;
+	x = 0;
+}

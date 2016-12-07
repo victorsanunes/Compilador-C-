@@ -1,12 +1,4 @@
-/****************************************************/
-/* Arquivo: analyze.c                               */
-/* Implementação do analisador semântico            */
-/* para o compilador Cminus                         */
-/* Compiler Construction:                           */
-/* Eliseu Júnio Araújo                              */
-/****************************************************/
-
-#include "global.h"
+#include "globals.h"
 #include "symtab.h"
 #include "analyze.h"
 #include <string.h>
@@ -25,12 +17,10 @@ static void traverse( TreeNode * t,
                       void (* postProc) (TreeNode *) )
 {
     if (t != NULL)
-    {
-        preProc(t);
-        {
-            int i;
-            for (i=0; i < MAXCHILDREN; i++)
-                traverse(t->child[i],preProc,postProc);
+    {preProc(t);
+        {int i;
+         for (i=0; i < MAXCHILDREN; i++)
+           traverse(t->child[i],preProc,postProc);
         }
         postProc(t);
         traverse(t->sibling,preProc,postProc);
@@ -59,7 +49,7 @@ static void declError(TreeNode * t, char * message)
     Error = TRUE;
 }
 
-char * cat(char * s, char * v)
+char * cat(char * s, char * v) //concatena s e v
 {
     int n;
     char * t;
@@ -88,139 +78,143 @@ static void insertNode( TreeNode * t)
     case DeclKi:
         switch (t->kind.decl)
         {
-        case Fun:
+        case FunK:
             if (st_lookup(cat(t->attr.name,t->attr.name)) == -1)
-                st_insert_first(cat(t->attr.name,t->attr.name), t->attr.name, t->lineno,location++,t->escopo, t->type, Funcao);
+                st_insert_first(cat(t->attr.name,t->attr.name), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Funcao);
             else
-                declError(t, "erro de declaracao de funcao: funcao ja declarada");
+                declError(t, "Erro: funcao ja declarada.");
             break;
-        case Var:
-            if (t->type==Void)
+        case VarK:
+            if (t->tipo==Void)
             {
-                declError(t, "erro de declaracao de variavel: tipo void nao e permitido a variaveis");
+                declError(t, "Erro: variavel nao pode ser tipo void.");
             }
-            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1 )
+            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1 ) 
             {
-                declError(t, "erro de declaracao de variavel: mesmo nome usado em funcao");
+                declError(t, "Erro: variavel com mesmo nome de funcao.");
             }
-            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->type, Variavel);
+            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1) //correto, insere na tabela
+                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel);
             else
-                declError(t, "erro de declaracao de variavel: variavel ja declarada");
+                declError(t, "Erro: variavel ja declarada.");
             break;
-        case Vet:
-            if (t->type==Void)
+        case VetK:
+            if (t->tipo==Void)
             {
-                declError(t, "erro de declaracao de vetores: tipo void nao e permitido a vetores");
+                declError(t, "Erro: vetor nao pode ser tipo void.");
             }
             else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "erro de declaracao de vetores: mesmo nome usado em funcao");
+                declError(t, "Erro: vetor com mesmo nome de funcao.");
             else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->type, Vetor);
+                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor);
             else
-                declError(t, "erro de declaracao de vetores: vetor ja declarado");
+                declError(t, "Erro: vetor ja declarado.");
             break;
         default:
             break;
         }
         break;
-    case Param:
+    case ParamK:
         switch (t->kind.param)
         {
-        case Decl:
-            if (t->type==Void)
+        case DeclK:
+            if (t->tipo==Void)
             {
-                declError(t, "erro de parametro: tipo void nao e permitido a variaveis");
+                declError(t, "Erro: variavel nao pode ser tipo void.");
             }
             else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "erro de parametro: mesmo nome usado em funcao");
+                declError(t, "Erro: mesmo nome usado em funcao.");
             else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->type, Variavel);
+                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel);
 
             else
-                declError(t, "Ha mesmo nome em outra declaração de funcao ou veriavel");
+                declError(t, "Erro: nome ja utilizado em declaracao.");
             break;
-        case DeclV:
-            if (t->type==Void)
+        case DeclVK:
+            if (t->tipo==Void)
             {
-                declError(t, "erro de parametro: tipo void nao e permitido a vetores");
+                declError(t, "Erro: vetor nao pode ser tipo void.");
             }
             else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "erro de parametro: mesmo nome usado em funcao");
+                declError(t, "Erro: vetor com mesmo nome de funcao.");
             else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->type, Vetor);
+                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor);
             else
-                declError(t, "Há mesmo nome em outra declaração de função ou vetor");
+                declError(t, "Erro: nome ja utilizado em declaracao.");
             break;
         default:
             break;
         }
         break;
-    case Exp:
+    case ExpressionK:
         switch (t->kind.expression)
         {
-        case Variavel:
+        case VariavelK:
             if (st_lookup(cat(t->attr.name,t->escopo)) == -1 && st_lookup(cat(t->attr.name,"programa")) == -1)
-                declError(t, "erro de chamada de variavel: variavel nao declarada");
+                declError(t, "Erro: variavel nao declarada");
             else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "erro de chamada de variavel: mesmo nome usado em funcao");
+                declError(t, "Erro: variavel com mesmo nome de funcao.");
             else
             {
                 if (st_lookup(cat(t->attr.name,t->escopo)) != -1)
                 {
-                    t->type=st_lookupTipo(cat(t->attr.name, t->escopo));
+                    t->tipo=st_lookupTipo(cat(t->attr.name, t->escopo));
                     st_insert(cat(t->attr.name,t->escopo), t->lineno);
                 }
                 else if(st_lookup(cat(t->attr.name,"programa")) != -1)
                 {
-                    t->type=st_lookupTipo(cat(t->attr.name, "programa"));
+                    t->tipo=st_lookupTipo(cat(t->attr.name, "programa"));
                     st_insert(cat(t->attr.name,"programa"), t->lineno);
                 }
             }
             break;
-        case Vetor:
+        case VetorK:
             if (st_lookup(cat(t->attr.name,t->escopo)) == -1 && st_lookup(cat(t->attr.name,"programa")) == -1)
-                declError(t, "erro de chamada de vetor: vetor nao declarado");
+                declError(t, "Erro: vetor nao declarado");
             else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "erro de chamada de vetor: mesmo nome usado em funcao");
+                declError(t, "Erro: vetor com mesmo nome de funcao.");
             else
             {
 
                 if (st_lookup(cat(t->attr.name,t->escopo)) != -1)
                 {
-                    t->type=st_lookupTipo(cat(t->attr.name, t->escopo));
+                    t->tipo=st_lookupTipo(cat(t->attr.name, t->escopo));
                     st_insert(cat(t->attr.name,t->escopo), t->lineno);
                 }
                 else if(st_lookup(cat(t->attr.name,"programa")) != -1)
                 {
-                    t->type=st_lookupTipo(cat(t->attr.name, "programa"));
+                    t->tipo=st_lookupTipo(cat(t->attr.name, "programa"));
                     st_insert(cat(t->attr.name,"programa"), t->lineno);
                 }
             }
             break;
-        case Call:
+        case CallK:
             if (st_lookup(cat(t->attr.name,t->attr.name)) == -1)
-                declError(t, "erro de chamada de funcao: funcao nao declarada");
+                declError(t, "Erro: funcao nao declarada.");
             else
             {
-                t->type=st_lookupTipo(cat(t->attr.name, t->attr.name));
+                t->tipo=st_lookupTipo(cat(t->attr.name, t->attr.name));
                 st_insert(cat(t->attr.name,t->attr.name), t->lineno);
             }
             break;
-        case Op:
-            if ((t->attr.op == MEIG) || (t->attr.op == LT) || (t->attr.op == RT) || (t->attr.op == MAIG) || (t->attr.op == IGIG) || (t->attr.op == EXIG) || (t->attr.op == OR) || (t->attr.op == EE) || (t->attr.op == NOT))
-                t->type = Boolean;
+        case OpK:
+            if (
+				(t->attr.op == MENOROUIGUAL) || (t->attr.op == MAIOR) || 
+				(t->attr.op == MENOR) || (t->attr.op == MAIOROUIGUAL) || 
+				(t->attr.op == EQ) || (t->attr.op == DIFERENTE)
+				)
+                t->tipo = Boolean;
             else
-                t->type = Integer;
+                t->tipo = Integer;
             break;
-        case Unary:
-        case Equal:
-        case Id:
+        case UnaryK:
+        case EqualK:
+        case IdNovoK:
         default:
             break;
         }
         break;
-    case Stmt:
+    case StmtK:
     default:
         break;
     }
@@ -236,7 +230,7 @@ void buildSymtab(TreeNode * syntaxTree)
     traverse(syntaxTree,insertNode,nullProc);
     if(st_lookup(cat("main","main")) == -1)
     {
-        declError(syntaxTree, "função main nao declarada");
+        declError(syntaxTree, "Erro: funcao main nao declarada.");
     }
     if (TraceAnalyze)
     {
@@ -252,113 +246,107 @@ static void checkNode(TreeNode * t)
 {
     switch (t->nodekind)
     {
-    case Exp:
+    case ExpressionK:
         switch (t->kind.expression)
         {
-        case Op:
+        case OpK:
             if(t->child[0] != NULL && t->child[1] != NULL)
             {
-                if (t->child[0]->type != t->child[1]->type)
-                    typeError(t,"Operacao aplicada para tipos diferentes");
+                if (t->child[0]->tipo != t->child[1]->tipo)
+                    typeError(t,"Operacao realizada com tipos diferentes.");
             }
             if(t->child[0] != NULL && t->child[1] != NULL)
             {
-                if(t->child[0]->type!=t->type || t->child[0]->type!=t->type)
+                if(t->child[0]->tipo!=t->tipo || t->child[0]->tipo!=t->tipo)
                 {
-                    typeError(t,"Operacao aplicada para tipos diferentes");
+                    typeError(t,"Operacao realizada com tipos diferentes.");
                 }
             }
             break;
-        case Unary:
-            if(t->attr.op == NOT)
+        case UnaryK:
+           if(t->attr.op == MENOS)
             {
-                t->type = Boolean;
+                t->tipo = Integer;
             }
-            else if(t->attr.op == MINUS)
+            if(t->tipo!=t->child[0]->tipo)
             {
-                t->type = Integer;
+                typeError(t,"Operacao realizada com tipos diferentes .");
             }
-            if(t->type!=t->child[0]->type)
-            {
-                typeError(t,"Operacao aplicada para tipos diferentes");
-            }
-        case Equal:
+        case EqualK:
             if(t->child[0] != NULL && t->child[1] != NULL)
             {
-                if (t->child[0]->type != t->child[1]->type)
-                    typeError(t,"Operacao aplicada para tipos diferentes");
+                if (t->child[0]->tipo != t->child[1]->tipo)
+                    typeError(t,"Operacao realizada com tipos diferentes .");
             }
             break;
-        case Vetor:
+        case VetorK:
             if(t->child[0] != NULL)
             {
-                if(t->child[0]->type!=Integer)
+                if(t->child[0]->tipo!=Integer)
                 {
-                    typeError(t,"it have expected Integer");
+                    typeError(t,"Esperava-se inteiro.");
                 }
             }
             break;
-        case Const:
-        case Variavel:
-        case Call:
+        case ConstK:
+        case VariavelK:
+        case CallK:
         default:
             break;
         }
         break;
-    case Stmt:
+    case StmtK:
         switch (t->kind.stmt)
         {
-        case If:
+        case IfK:
             if(t->child[0] != NULL)
             {
-                if (t->child[0]->type != Boolean)
+                if (t->child[0]->tipo != Boolean)
                     typeError(t->child[0],"if test is not Boolean");
             }
             break;
-        case While:
+        case WhileK:
             if(t->child[0] != NULL)
             {
-                if (t->child[0]->type != Boolean)
+                if (t->child[0]->tipo != Boolean)
                     typeError(t->child[0],"While test is not Boolean");
             }
             break;
-        case Return:
+        case ReturnK:
             if (t->child[0]!=NULL)
             {
-                if (t->child[0]->type != t->type)
-                    typeError(t->child[0],"Tipo de retorno não corresponde ao da função");
+                if (t->child[0]->tipo != t->tipo)
+                    typeError(t->child[0],"Erro: tipo de retorno não corresponde ao retorno da funcao.");
             }
             else
             {
-                if(t->type!=Void)
+                if(t->tipo!=Void)
                 {
-                    typeError(t,"Tipo de retorno não corresponde ao da função");
+                    typeError(t,"Erro: tipo de retorno não corresponde ao retorno da funcao.");
                 }
             }
-        case Coun:
-        default:
-            break;
+       
         }
         break;
     case DeclKi:
         switch (t->kind.decl)
         {
-        case Var:
+        case VarK:
             break;
-        case Vet:
+        case VetK:
             break;
-        case Fun:
+        case FunK:
             break;
         default:
             break;
         }
         break;
-    case Param:
+    case ParamK:
         switch (t->kind.decl)
         {
-        case Decl:
+        case DeclK:
             break;
-        case DeclV:
+        case DeclVK:
             break;
         default:
             break;
