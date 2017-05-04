@@ -1,12 +1,3 @@
-/****************************************************/
-/* File: globals.h                                  */
-/* Yacc/Bison Version                               */
-/* Global types and vars for TINY compiler          */
-/* must come before other include files             */
-/* Compiler Construction: Principles and Practice   */
-/* Kenneth C. Louden                                */
-/****************************************************/
-
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
@@ -27,11 +18,12 @@
 #ifndef YYPARSER
 
 /* the name of the following file may change */
-#include "tiny.tab.h"
+#include "cmenos.tab.h"
 
 /* ENDFILE is implicitly defined by Yacc/Bison,
  * and not included in the tab.h file
  */
+
 #define ENDFILE 0
 
 #endif
@@ -45,12 +37,13 @@
 #endif
 
 /* MAXRESERVED = the number of reserved words */
-#define MAXRESERVED 8
+#define MAXRESERVED 9
 
 /* Yacc/Bison generates its own integer values
  * for tokens
  */
-typedef int TokenType; 
+
+typedef int TokenType;
 
 extern FILE* source; /* source code text file */
 extern FILE* listing; /* listing output text file */
@@ -62,26 +55,34 @@ extern int lineno; /* source line number for listing */
 /***********   Syntax tree for parsing ************/
 /**************************************************/
 
-typedef enum {StmtK,ExpK} 				NodeKind;
-typedef enum {IfK,WhileK,AssignK, VoidK, ReturnK} 	StmtKind;
-typedef enum {OpK,ConstK,IdK, IntK} 			ExpKind;
+typedef enum {StmtK,DeclKi,ParamK,ExpressionK} NodeKind;
+typedef enum {VarK,VetK,FunK} DeclKiind;
+typedef enum {DeclK, DeclVK} ParamKind;
+typedef enum {IfK, WhileK, ReturnK} StmtKind;
+typedef enum {ConstK,OpK,VariavelK,EqualK,VetorK,CallK,UnaryK,IdNovoK} ExpressionKind;
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;
+typedef enum {Variavel, Funcao, Vetor} TipType;
 
 #define MAXCHILDREN 3
 
 typedef struct treeNode
-   { struct treeNode * child[MAXCHILDREN];
-     struct treeNode * sibling;
-     int lineno;
-     NodeKind nodekind;
-     union { StmtKind stmt; ExpKind exp;} kind;
-     union { TokenType op;
-             int val;
-             char * name; } attr;
-     ExpType type; /* for type checking of exps */
-   } TreeNode;
+{
+    struct treeNode * child[MAXCHILDREN];
+    struct treeNode * sibling;
+    int lineno;
+    NodeKind nodekind;
+    ExpType tipo;
+    char * escopo;
+    union { StmtKind stmt; DeclKiind decl; ParamKind param; ExpressionKind expression;} kind;
+    union { TokenType op;
+        int val;
+        char * name;
+        TipType tipoId;
+
+    } attr;
+} TreeNode;
 
 /**************************************************/
 /***********   Flags for tracing       ************/
@@ -116,5 +117,5 @@ extern int TraceAnalyze;
 extern int TraceCode;
 
 /* Error = TRUE prevents further passes if an error occurs */
-extern int Error; 
+extern int Error;
 #endif
