@@ -513,8 +513,7 @@ char tokenString[MAXTOKENLEN+1];
 extern YYSTYPE yylval;
 void erroLexico(char *);
 void printToken(TokenType currentToken, char *tokenString);
-
-#line 518 "lex.yy.c"
+#line 517 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -732,10 +731,10 @@ YY_DECL
 		}
 
 	{
-#line 25 "cmenos.l"
+#line 24 "cmenos.l"
 
 
-#line 739 "lex.yy.c"
+#line 738 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -794,148 +793,148 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 27 "cmenos.l"
+#line 26 "cmenos.l"
 {return IF;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "cmenos.l"
+#line 27 "cmenos.l"
 {return ELSE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 29 "cmenos.l"
+#line 28 "cmenos.l"
 {return INT;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 30 "cmenos.l"
+#line 29 "cmenos.l"
 {return RETURN;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 31 "cmenos.l"
+#line 30 "cmenos.l"
 {return VOID;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 32 "cmenos.l"
+#line 31 "cmenos.l"
 {return WHILE;}   
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 33 "cmenos.l"
+#line 32 "cmenos.l"
 {return ATTR;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 34 "cmenos.l"
+#line 33 "cmenos.l"
 {return COMA;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 35 "cmenos.l"
+#line 34 "cmenos.l"
 {return EQ;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 36 "cmenos.l"
+#line 35 "cmenos.l"
 {return MENOROUIGUAL;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 37 "cmenos.l"
+#line 36 "cmenos.l"
 {return MAIOROUIGUAL;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 38 "cmenos.l"
+#line 37 "cmenos.l"
 {return DIFERENTE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 39 "cmenos.l"
+#line 38 "cmenos.l"
 {return MENOR;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 40 "cmenos.l"
+#line 39 "cmenos.l"
 {return MAIOR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 41 "cmenos.l"
+#line 40 "cmenos.l"
 {return MAIS;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 42 "cmenos.l"
+#line 41 "cmenos.l"
 {return MENOS;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 43 "cmenos.l"
+#line 42 "cmenos.l"
 {return VEZES;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 44 "cmenos.l"
+#line 43 "cmenos.l"
 {return LPAREN;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 45 "cmenos.l"
+#line 44 "cmenos.l"
 {return RPAREN;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 46 "cmenos.l"
+#line 45 "cmenos.l"
 {return LCOLCHETE;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 47 "cmenos.l"
+#line 46 "cmenos.l"
 {return RCOLCHETE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 48 "cmenos.l"
+#line 47 "cmenos.l"
 {return LCHAVE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 49 "cmenos.l"
+#line 48 "cmenos.l"
 {return RCHAVE;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 50 "cmenos.l"
+#line 49 "cmenos.l"
 {return SEMI;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 52 "cmenos.l"
+#line 51 "cmenos.l"
 {return NUM;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 53 "cmenos.l"
+#line 52 "cmenos.l"
 {return ID;}
 	YY_BREAK
 case 27:
 /* rule 27 can match eol */
 YY_RULE_SETUP
-#line 54 "cmenos.l"
+#line 53 "cmenos.l"
 {lineno++;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 55 "cmenos.l"
+#line 54 "cmenos.l"
 {/* skip whitespace */}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 56 "cmenos.l"
+#line 55 "cmenos.l"
 { char c;
 		   int verifica = 0;
                   do
@@ -954,20 +953,20 @@ YY_RULE_SETUP
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 71 "cmenos.l"
+#line 70 "cmenos.l"
 {return BARRA;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 72 "cmenos.l"
+#line 71 "cmenos.l"
 {return ERROR;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 74 "cmenos.l"
+#line 73 "cmenos.l"
 ECHO;
 	YY_BREAK
-#line 971 "lex.yy.c"
+#line 970 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1968,7 +1967,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 74 "cmenos.l"
+#line 73 "cmenos.l"
 
 
 

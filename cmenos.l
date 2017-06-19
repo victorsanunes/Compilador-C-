@@ -12,7 +12,6 @@ char tokenString[MAXTOKENLEN+1];
 extern YYSTYPE yylval;
 void erroLexico(char *);
 void printToken(TokenType currentToken, char *tokenString);
-
 %}
 
 digit       [0-9]

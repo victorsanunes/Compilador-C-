@@ -5,65 +5,18 @@
 #include <stdlib.h>
 #include "util.h"
 #include <string.h>
+#include "lista.h"
 
 #define SIZE 211
 char aux[300];
-
-
 #define SHIFT 4
 
-typedef struct quadra{
-  char * campo1;
-  char * campo2;
-  char * campo3;
-  char * campo4;
-  struct quadra * prox;
-}quadra;
-quadra *no1;
-typedef struct lista{
-  quadra * inicio;
-  quadra * fim;
-  int tam;
-}lista;
 
-void inicializaLIsta(lista * l){
-  l->inicio = NULL;
-  l->fim = NULL;
-  l->tam=0;
-}
+quadra no;
+quadra noAUX;
 
-quadra* criaNo(char *campo1, char *campo2, char *campo3,char *campo4){
-  quadra *novoNo;
-  novoNo = malloc(sizeof(quadra));
-  novoNo->campo1 =campo1;
-  novoNo->campo2 =campo2;
-  novoNo->campo3 =campo3;
-  novoNo->campo4 =campo4;
-  novoNo->prox =  NULL;
-  return novoNo;
-}
 
-void insereFinal( lista *l, quadra *no){
-  if(l->inicio == NULL){//lista vazia
-    l->inicio = no;
-    l->fim = no;
-    l->tam++;
-  }
-  else{
-    l->fim->prox = no;
-    l->fim = no;
-    l->tam++;
-  }
-}
-
-void imprimeLista(lista *l){
-  quadra *p;
-  p = l->inicio;
-  while(p!=NULL){
-    printf("(%s,%s,%s,%s)\n",p->campo1,p->campo2,p->campo3,p->campo4);
-    p= p->prox;
-  }
-}
+int campo;
 int indicadorDeLinhaIF[20];
 int contadorDeLinhaIF = -1;
 int indicadorDeLinhaWhile1[20];
@@ -80,74 +33,91 @@ int contparam =0;
 int auxVetR = 0;
 
 int hash ( char * key ){
-   int temp = 0;
-   int i = 0;
-   while (key[i] != '\0')
-   {
-       temp = ((temp << SHIFT) + key[i]) % SIZE;
-       ++i;
-   }
-   return temp;
+    int temp = 0;
+    int i = 0;
+    while (key[i] != '\0'){
+        temp = ((temp << SHIFT) + key[i]) % SIZE;
+        ++i;
+    }
+    return temp;
 }
 
-static void cGen (TreeNode * tree, FILE *code,lista *codigoIntermediario);
-static void cGenA( TreeNode * tree, FILE *code,lista *codigoIntermediario);
+//concatena s e v
+char * concatena(char * s, char * v){
+    //printf("concatena %s com %s\n", s, v);
+    int n;
+    char * t;
+    if (s==NULL) return NULL;
+    n = strlen(s)+1;
+    n = n+strlen(v);
+    t = malloc(n);
+    if (t==NULL)
+        fprintf(listing,"Out of memory error at line %d\n",lineno);
+    else{
+        strcpy(t,s);
+        strcat(t,v);
+    }
+    return t;
+}
+
+static void cGen (TreeNode * tree, FILE *code);
+static void cGenA( TreeNode * tree, FILE *code);
 
 char *printSymbol(TreeNode *tree, FILE *code){
     char *aux;
     switch (tree->attr.op) {
         case ATTR:
-            //fprintf(stdout, " = ");
+            //fprintf(code, " = ");
             aux="asg";
             return aux;
             break;
         case EQ:
-              //fprintf(stdout, " == ");
+              //fprintf(code, " == ");
               aux="igual";
               return aux;
               break;
         case MENOROUIGUAL:
-            //fprintf(stdout, " <= ");
+            //fprintf(code, " <= ");
             aux="menorI";
             return aux;
             break;
         case MAIOROUIGUAL:
-            //fprintf(stdout, " >= ");
+            //fprintf(code, " >= ");
             aux="maiorI";
             return aux;
             break;
         case DIFERENTE:
-            //fprintf(stdout, " != ");
+            //fprintf(code, " != ");
             aux="dif";
             return aux;
             break;
         case MENOR:
-          //  fprintf(stdout, " < ");
+          //  fprintf(code, " < ");
             aux="menor";
             return aux;
             break;
         case MAIOR:
-            //fprintf(stdout, " > ");
+            //fprintf(code, " > ");
             aux="maior";
             return aux;
             break;
         case MAIS:
-            //fprintf(stdout, " + " );
+            //fprintf(code, " + " );
             aux="sum";
             return aux;
             break;
         case MENOS:
-            //fprintf(stdout, " - ");
+            //fprintf(code, " - ");
             aux="sub";
             return aux;
             break;
         case VEZES:
-            //fprintf(stdout, " * ");
+            //fprintf(code, " * ");
             aux="mul";
             return aux;
             break;
         case BARRA:
-            //fprintf(stdout, " / ");
+            //fprintf(code, " / ");
             aux="div";
             return aux;
             break;
@@ -194,81 +164,160 @@ int checaSymbol(TreeNode *tree, FILE *code){
             break;
     }
 }
-static void genStmt(TreeNode * tree, FILE *code, lista *codigoIntermediario){
+static void genStmt(TreeNode * tree, FILE *code){
     TreeNode *condicao_do_if, *corpo_do_if, *corpo_do_else,*corpo_do_while,*condicao_do_while, *sentenca_return;
-
-
-
     switch (tree->kind.stmt) {
         case IfK:
             condicao_do_if  = tree->child[0];
             corpo_do_if     = tree->child[1];
             corpo_do_else   = tree->child[2];
             if(condicao_do_if != NULL){
-                cGen(condicao_do_if,code,codigoIntermediario);
-                fprintf(stdout, "(if_f,t%d,L%d,_)\n",indiceTemporario-1,contadorDeLinha);
+                cGen(condicao_do_if,code);
+                no.campo1="if_f";
+                no.campo2=indiceTemporario-1;
+                no.flagCampo2=1;//Temporario
+                no.campo3=contadorDeLinha;
+                no.flagCampo3=5;//label
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                no.prox=NULL;
+                insereFinal(l,no);
+                fprintf(code, "(if_f,t%d,L%d,_)\n",indiceTemporario-1,contadorDeLinha);
                 contadorDeLinhaIF++;
                 indicadorDeLinhaIF[contadorDeLinhaIF]=contadorDeLinha;
                 contadorDeLinha++;
-                cGen(corpo_do_if,code,codigoIntermediario);
+                cGen(corpo_do_if,code);
                 if(corpo_do_else!=NULL){
                   contadorDeLinhaElse++;
                   indicadorDeLinhaElse[contadorDeLinhaElse]=contadorDeLinha;
                   contadorDeLinha++;
-                  fprintf(stdout, "(got,L%d,_,_)\n", indicadorDeLinhaElse[contadorDeLinhaElse]);
+                  no.campo1="got";
+                  no.campo2=indicadorDeLinhaElse[contadorDeLinhaElse];
+                  no.flagCampo2=5;//label
+                  no.campo3=0;
+                  no.flagCampo3=0;//vazio
+                  no.campo4=0;
+                  no.flagCampo4=0;//vazio
+                  no.prox=NULL;
+                  insereFinal(l,no);
+                  fprintf(code, "(got,L%d,_,_)\n", indicadorDeLinhaElse[contadorDeLinhaElse]);
                 }
-                fprintf(stdout, "(lab,L%d,_,_)\n",indicadorDeLinhaIF[contadorDeLinhaIF]);
+                no.campo1="lab";
+                no.campo2=indicadorDeLinhaIF[contadorDeLinhaIF];
+                no.flagCampo2=5;//label
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                no.prox=NULL;
+                insereFinal(l,no);
+                fprintf(code, "(lab,L%d,_,_)\n",indicadorDeLinhaIF[contadorDeLinhaIF]);
                 if(corpo_do_else!=NULL){
-                  cGen(corpo_do_else,code,codigoIntermediario);
-                  fprintf(stdout, "(lab,L%d,_,_)\n",indicadorDeLinhaElse[contadorDeLinhaElse]);
+                  cGen(corpo_do_else,code);
+                  no.campo1="lab";
+                  no.campo2=indicadorDeLinhaElse[contadorDeLinhaElse];
+                  no.flagCampo2=5;//label
+                  no.campo3=0;
+                  no.flagCampo3=0;//vazio
+                  no.campo4=0;
+                  no.flagCampo4=0;//vazio
+                  no.prox=NULL;
+                  insereFinal(l,no);
+                  fprintf(code, "(lab,L%d,_,_)\n",indicadorDeLinhaElse[contadorDeLinhaElse]);
                     contadorDeLinhaElse--;
-
                 }
                 contadorDeLinhaIF--;
-
             }
             break;
         case WhileK:
           condicao_do_while  = tree->child[0];
           corpo_do_while     = tree->child[1];
           if(condicao_do_while != NULL){
-            fprintf(stdout, "(lab,L%d,_,_)\n",contadorDeLinha);
+            no.campo1="lab";
+            no.campo2=contadorDeLinha;
+            no.flagCampo2=5;//label
+            no.campo3=0;
+            no.flagCampo3=0;//vazio
+            no.campo4=0;
+            no.flagCampo4=0;//vazio
+            no.prox=NULL;
+            insereFinal(l,no);
+            fprintf(code, "(lab,L%d,_,_)\n",contadorDeLinha);
             contadorDeLinhaWhile1++;
             indicadorDeLinhaWhile1[contadorDeLinhaWhile1]=contadorDeLinha;
             contadorDeLinha++;
-            cGen(condicao_do_while,code,codigoIntermediario);
-            fprintf(stdout, "(if_f,t%d,L%d,_)\n",indiceTemporario-1,contadorDeLinha);
+            cGen(condicao_do_while,code);
+            no.campo1="if_f";
+            no.campo2=indiceTemporario-1;
+            no.flagCampo2=1;//Temporario
+            no.campo3=contadorDeLinha;
+            no.flagCampo3=5;//label
+            no.campo4=0;
+            no.flagCampo4=0;//vazio
+            no.prox=NULL;
+            insereFinal(l,no);
+            fprintf(code, "(if_f,t%d,L%d,_)\n",indiceTemporario-1,contadorDeLinha);
             contadorDeLinhaWhile2++;
             indicadorDeLinhaWhile2[contadorDeLinhaWhile2]=contadorDeLinha;
             contadorDeLinha++;
-            cGen(corpo_do_while,code,codigoIntermediario);
-            fprintf(stdout, "(got,L%d,_,_)\n",indicadorDeLinhaWhile1[contadorDeLinhaWhile1]);
+            cGen(corpo_do_while,code);
+            no.campo1="got";
+            no.campo2=indicadorDeLinhaWhile1[contadorDeLinhaWhile1];
+            no.flagCampo2=5;//label
+            no.campo3=0;
+            no.flagCampo3=0;//vazio
+            no.campo4=0;
+            no.flagCampo4=0;//vazio
+            no.prox=NULL;
+            insereFinal(l,no);
+            fprintf(code, "(got,L%d,_,_)\n",indicadorDeLinhaWhile1[contadorDeLinhaWhile1]);
             contadorDeLinhaWhile1--;
-            fprintf(stdout, "(lab,L%d,_,_)\n",  indicadorDeLinhaWhile2[contadorDeLinhaWhile2]);
+            no.campo1="lab";
+            no.campo2=indicadorDeLinhaWhile2[contadorDeLinhaWhile2];
+            no.flagCampo2=5;//label
+            no.campo3=0;
+            no.flagCampo3=0;//vazio
+            no.campo4=0;
+            no.flagCampo4=0;//vazio
+            no.prox=NULL;
+            insereFinal(l,no);
+            fprintf(code, "(lab,L%d,_,_)\n",  indicadorDeLinhaWhile2[contadorDeLinhaWhile2]);
             contadorDeLinhaWhile2--;
-
           }
-
-
             break;
       case ReturnK:
             sentenca_return = tree->child[0];
             if(sentenca_return != NULL){
               if(sentenca_return->kind.expression == VariavelK || sentenca_return->kind.expression == ConstK){
-                fprintf(stdout, "(ret");
-                cGen(sentenca_return,code,codigoIntermediario);
-                fprintf(stdout, ",_,_)\n");
+                no.campo1="ret";
+                fprintf(code, "(ret");
+                campo=2;
+                cGen(sentenca_return,code);
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                no.prox=NULL;
+                insereFinal(l,no);
+                fprintf(code, ",_,_)\n");
               }else{
-                cGen(sentenca_return,code,codigoIntermediario);
-                fprintf(stdout, "(ret,t%d,_,_)\n",indiceTemporario-1);
+                cGen(sentenca_return,code);
+                no.campo1="ret";
+                no.campo2=indiceTemporario-1;
+                no.flagCampo2=1;//Temporario
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                no.prox=NULL;
+                insereFinal(l,no);
+                fprintf(code, "(ret,t%d,_,_)\n",indiceTemporario-1);
               }
             }
-
-
             break;
     }
 }
-static void genDecli(TreeNode * tree, FILE *code,lista *codigoIntermediario){
+static void genDecli(TreeNode * tree, FILE *code){
     TreeNode *p1, *p2, *p3;
     switch (tree->kind.decl) {
         case VarK:
@@ -276,19 +325,37 @@ static void genDecli(TreeNode * tree, FILE *code,lista *codigoIntermediario){
         case VetK:
           break;
         case FunK:
-          fprintf(stdout,"(lab,%d,_,_)\n",hash(tree->attr.name));
-          cGen(tree->child[1],code,codigoIntermediario);
-          break;
+            no.campo1="lab";
+
+            no.campo2=hash(concatena(tree->attr.name, tree->attr.name));
+            no.flagCampo2=3;//hash
+            no.campo3=0;
+            no.flagCampo3=0;//vazio
+            no.campo4=0;
+            no.flagCampo4=0;//vazio
+            no.prox=NULL;
+            insereFinal(l,no);
+            fprintf(code,"(lab,%d,_,_)\n",hash(concatena(tree->attr.name, tree->attr.name)));//apagar
+            cGen(tree->child[1],code);
+            break;
     }
 }
-
-static void genExpression(TreeNode * tree, FILE *code,lista *codigoIntermediario){
+static void genExpression(TreeNode * tree, FILE *code){
     TreeNode *p1, *p2, *p3;
     switch (tree->kind.expression) {
-
         case ConstK:
           if(tree != NULL){
-              fprintf(stdout,",%d",tree->attr.val);
+            if(campo == 2){
+              no.campo2 =tree->attr.val;
+              no.flagCampo2=2;//constante
+            }else if(campo == 3){
+              no.campo3 =tree->attr.val;
+              no.flagCampo3=2;//constante
+            }else if(campo ==4){
+              no.campo4 =tree->attr.val;
+              no.flagCampo4=2;//constante
+            }
+              fprintf(code,",*%d",tree->attr.val);
           }
           break;
         case OpK:
@@ -302,60 +369,127 @@ static void genExpression(TreeNode * tree, FILE *code,lista *codigoIntermediario
             if(p1 != NULL && p2 != NULL){
               //fprintf(listing, "**p1=%d  p2=%d\n",p1->kind.expression,p2->kind.expression );
               if((p1->kind.expression == ConstK || p1->kind.expression == VariavelK) && (p2->kind.expression == ConstK || p2->kind.expression == VariavelK)){
-                fprintf(stdout, "(%s",printSymbol(tree,code));
-                cGen(p1,code,codigoIntermediario);
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout,",t%d)\n",indiceTemporario );
+                no.campo1=printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));
+                campo=2;
+                cGen(p1,code);
+                campo=3;
+                cGen(p2,code);
+                no.campo4 =indiceTemporario;
+                no.flagCampo4=1;//temporario
+                insereFinal(l,no);
+                fprintf(code,",t%d)\n",indiceTemporario );
                 indiceTemporario++;
               } else if ((p1->kind.expression == ConstK || p1->kind.expression == VariavelK) && (p2->kind.expression == VetorK || p2->kind.expression == CallK)){
                 auxVetR=0;
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout, "(%s",printSymbol(tree,code));//code
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );//code
+                cGen(p2,code);
+                no.campo1 = printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));//code
+                campo=2;
+                cGen(p1,code);
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );//code
                 indiceTemporario++;
               }else if((p2->kind.expression == ConstK || p2->kind.expression == VariavelK) && (p1->kind.expression == VetorK || p1->kind.expression == CallK)){
                 auxVetR=0;
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, "(%s",printSymbol(tree,code));//code
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );//code
+                cGen(p1,code);
+                no.campo1 =printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));//code
+                campo=2;
+                cGen(p2,code);
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );//code
                 indiceTemporario++;
               }else if(p2->kind.expression == OpK && (p1->kind.expression == ConstK || p1->kind.expression == VariavelK)){
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout, "(%s",printSymbol(tree,code));
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );
+                cGen(p2,code);
+                no.campo1 =printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));
+                campo=2;
+                cGen(p1,code);
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );
                 indiceTemporario++;
               }else if(p1->kind.expression == OpK && (p2->kind.expression == ConstK || p2->kind.expression == VariavelK) ){
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, "(%s",printSymbol(tree,code));
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );
+                cGen(p1,code);
+                no.campo1 =printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));
+                campo=2;
+                cGen(p2,code);
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );
                 indiceTemporario++;
               }else if(p2->kind.expression == OpK && (p1->kind.expression == VetorK || p1->kind.expression == CallK)){
-                cGen(p2,code,codigoIntermediario);
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
+                cGen(p2,code);
+                cGen(p1,code);
+                no.campo1=printSymbol(tree,code);
+                no.campo2=indiceTemporario-2;
+                no.flagCampo2=1;//temporario
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
                 indiceTemporario++;
               }else if(p1->kind.expression == OpK && (p2->kind.expression == VetorK || p2->kind.expression == CallK)){
-                cGen(p2,code,codigoIntermediario);
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
+                cGen(p2,code);
+                cGen(p1,code);
+                no.campo1=printSymbol(tree,code);
+                no.campo2=indiceTemporario-2;
+                no.flagCampo2=1;//temporario
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
                 indiceTemporario++;
               }else{
                 auxVetR=0;
-                cGen(p2,code,codigoIntermediario);
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
+                cGen(p2,code);
+                cGen(p1,code);
+                no.campo1=printSymbol(tree,code);
+                no.campo2=indiceTemporario-2;
+                no.flagCampo2=1;//temporario
+                no.campo3 =indiceTemporario-1;
+                no.flagCampo3 =1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4 =1;//temporario
+                insereFinal(l,no);
+                fprintf(code, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
                 indiceTemporario++;
               }
-              }
-
+            }
             break;
         case VariavelK:
             if(tree != NULL){
-                fprintf(stdout, ",%s", tree->attr.name);
+              if(campo == 2){
+                no.campo2 =hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo2=3;//hash
+              }else if(campo == 3){
+                no.campo3 =hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo3=3;//hash
+              }else if(campo ==4){
+                no.campo4 =hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo4=3;//hash
+              }
+                fprintf(code, ",%s", tree->attr.name);
               //  fprintf(code, "%s ", tree->attr.name);
             }
             break;
@@ -364,55 +498,106 @@ static void genExpression(TreeNode * tree, FILE *code,lista *codigoIntermediario
           p2 = tree->child[1];
           if(p1!=NULL && p2!=NULL){
             if(p1->kind.expression == VetorK){
-              if(p2->kind.expression == ConstK || p2->kind.expression == VariavelK){
-                fprintf(stdout, "(%s",printSymbol(tree,code));//code
-                cGen(p2,code,codigoIntermediario);
+              if(p2->kind.expression == ConstK || p2->kind.expression == VariavelK){//?????????????
+                no.campo1=printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));//code
+                campo=2;
+                cGen(p2,code);
                 auxVetR=1;
-                cGen(p1,code,codigoIntermediario);
+                campo=3;
+                cGen(p1,code);
               }
-              else if(p2->kind.expression == OpK || p2->kind.expression == VetorK){
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout, "(%s,t%d",printSymbol(tree,code),indiceTemporario-1);
+              else if(p2->kind.expression == OpK || p2->kind.expression == VetorK){//?????????????????
+                cGen(p2,code);
+                no.campo1=printSymbol(tree,code);
+                no.campo2=indiceTemporario-1;
+                no.flagCampo2=1;//temporario
+                fprintf(code, "(%s,t%d",printSymbol(tree,code),indiceTemporario-1);
                 auxVetR=1;
-                cGen(p1,code,codigoIntermediario);
+                campo=3;
+                cGen(p1,code);
               }
             }else{// quando p1 é variavelk
               if(p2->kind.expression == ConstK || p2->kind.expression == VariavelK){
-                fprintf(stdout, "(%s",printSymbol(tree,code));//code
-                cGen(p2,code,codigoIntermediario);
-                auxVetR=1;
-                fprintf(stdout, ",_");
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, ")\n");
+                no.campo1=printSymbol(tree,code);
+                fprintf(code, "(%s",printSymbol(tree,code));//code
+                campo=2;
+                cGen(p2,code);
+                auxVetR=0;
+                no.campo3=0;
+                no.flagCampo3=0;
+                fprintf(code, ",_");
+                campo=4;
+                cGen(p1,code);
+                insereFinal(l,no);
+                fprintf(code, ")\n");
               }
               else if(p2->kind.expression == OpK || p2->kind.expression == VetorK || p2->kind.expression == CallK){
-                cGen(p2,code,codigoIntermediario);
-                fprintf(stdout, "(%s,t%d",printSymbol(tree,code),indiceTemporario-1);
-                auxVetR=1;
-                fprintf(stdout, ",_");
-                cGen(p1,code,codigoIntermediario);
-                fprintf(stdout, ")\n");
+                cGen(p2,code);
+                no.campo1=printSymbol(tree,code);
+                no.campo2=indiceTemporario-1;
+                no.flagCampo2=1;//temporario
+                fprintf(code, "(%s,t%d",printSymbol(tree,code),indiceTemporario-1);
+                auxVetR=0;
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                fprintf(code, ",_");
+                campo=4;
+                cGen(p1,code);
+                insereFinal(l,no);
+                fprintf(code, ")\n");
               }
-
             }
-
           }
           break;
         case VetorK:
           p1 = tree->child[0];
           if(p1 != NULL){
             if(auxVetR == 1){ // caso o vetor recebe
-              cGen(p1,code,codigoIntermediario);
-              fprintf(stdout, ",%s)\n",tree->attr.name);
-              auxVetR=0;
+              if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK){
+                campo=3;
+                cGen(p1,code);
+                no.campo4=hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo4=3;//hash
+                fprintf(code, ",%s)\n",tree->attr.name);
+                insereFinal(l,no);
+                auxVetR=0;
+              }
+              else{
+                cGen(p1,code);
+                no.campo3= indiceTemporario-1;
+                no.flagCampo3=1;//temporario
+                no.campo4=hash(concatena(tree->attr.name, tree->attr.name));
+                no.flagCampo4=3;//hash
+                insereFinal(l,no);
+              }
             }
             else{ // caso o vetor seja somado
-              fprintf(stdout, "(asg,%s",tree->attr.name);//code
-              cGen(p1,code,codigoIntermediario);
-              fprintf(stdout, ",t%d)\n",indiceTemporario );
-              indiceTemporario++;
+              if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK){
+                no.campo1="asg";
+                no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo2=3;//hash
+                campo=3;
+                cGen(p1,code);
+                no.campo4=indiceTemporario;
+                no.flagCampo4=1;//temporario
+                insereFinal(l,no);
+                indiceTemporario++;
+                auxVetR=0;
+              }else{
+                cGen(p1,code);
+                no.campo1="asg";
+                no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo2=3;//hash
+                no.campo3=indiceTemporario-1;
+                no.flagCampo3=1;//temporario
+                no.campo4=indiceTemporario;
+                no.flagCampo4=1;//temporario
+                insereFinal(l,no);
+                indiceTemporario++;
             }
           }
+        }
           break;
         case CallK:
           p1=tree->child[0];
@@ -426,50 +611,85 @@ static void genExpression(TreeNode * tree, FILE *code,lista *codigoIntermediario
           p1=tree->child[0];
           while(p1!=NULL){
             if(p1!=NULL){
-              if(p1->kind.expression == ConstK ){
-                fprintf(stdout,"(param,%d,_,_)\n",p1->attr.val);
+              if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK ){
+                no.campo1="param";
+                campo=2;
+                cGenA(p1,code);
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                insereFinal(l,no);
+                fprintf(code,"(param,%d,_,_)\n",p1->attr.val);
                 p1=p1->sibling;
               }
             }
             if(p1!=NULL){
               if(p1->kind.expression == VetorK || p1->kind.expression == OpK || p1->kind.expression == CallK){
                 auxVetR=0;
-                cGenA(p1,code,codigoIntermediario);
-               	fprintf(stdout,"(param,t%d,_,_)\n",(indiceTemporario-1));
+                cGenA(p1,code);
+                no.campo1="param";
+                no.campo2=indiceTemporario-1;
+                no.flagCampo2=1;//temporario
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                insereFinal(l,no);
+               	fprintf(code,"(param,t%d,_,_)\n",(indiceTemporario-1));
                 p1=p1->sibling;
               }
             }
 
             if(p1!=NULL){
               if (p1->kind.expression == VariavelK){
-                fprintf(stdout,"(param,%s,_,_)\n",p1->attr.name);
+                no.campo1="param";
+                no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                no.flagCampo2=3;//hash
+                no.campo3=0;
+                no.flagCampo3=0;//vazio
+                no.campo4=0;
+                no.flagCampo4=0;//vazio
+                insereFinal(l,no);
+                fprintf(code,"(param,%s,_,_)\n",p1->attr.name);
               	 p1=p1->sibling;
               }
             }
           }
           if(tree->tipo==Void){
-		  	       fprintf(stdout,"(call,%d,%d,_)\n",hash(tree->attr.name),pilhaQntArgumento[topoPilha]);
-               pilhaQntArgumento[topoPilha]=0;
-               topoPilha--;
+              no.campo1="call";
+              no.campo2=hash(concatena(tree->attr.name, tree->attr.name));
+              no.flagCampo2=3;//hash
+              no.campo3=pilhaQntArgumento[topoPilha];
+              no.flagCampo3=6;//qntParametros
+              no.campo4=0;
+              no.flagCampo4=0;//vazio
+              insereFinal(l,no);
+		  	      fprintf(code,"(call,%d,%d,_)\n",hash(concatena(tree->attr.name, tree->escopo)),pilhaQntArgumento[topoPilha]);
+              pilhaQntArgumento[topoPilha]=0;
+              topoPilha--;
 
 		           }
                else{
-		  	            fprintf(stdout,"(call,%d,%d,t%d)\n",hash(tree->attr.name),pilhaQntArgumento[topoPilha],indiceTemporario);
-                    pilhaQntArgumento[topoPilha]=0;
-                    topoPilha--;
-		  	            indiceTemporario++;
+                 no.campo1="call";
+                 no.campo2=hash(concatena(tree->attr.name, tree->attr.name));
+                 no.flagCampo2=3;//hash
+                 no.campo3=pilhaQntArgumento[topoPilha];
+                 no.flagCampo3=6;//qntParametros
+                 no.campo4=indiceTemporario;
+                 no.flagCampo4=1;//vazio
+                 insereFinal(l,no);
+		  	         fprintf(code,"(call,%d,%d,t%d)\n",hash(concatena(tree->attr.name, tree->escopo)),pilhaQntArgumento[topoPilha],indiceTemporario);
+                 pilhaQntArgumento[topoPilha]=0;
+                 topoPilha--;
+		  	         indiceTemporario++;
 		           }
-
           break;
         default:
         break;
-
-
-
     }
 }
-
-static void cGen( TreeNode * tree, FILE *code,lista *codigoIntermediario){
+static void cGen( TreeNode * tree, FILE *code){
     if (tree != NULL)
     {
         //Verifica o tipo do no
@@ -479,31 +699,30 @@ static void cGen( TreeNode * tree, FILE *code,lista *codigoIntermediario){
 
         //No para declaracoes
         case StmtK:
-        	//fprintf(stdout, "\ncase StmtK :\n");
-            genStmt(tree, code,codigoIntermediario);
+        	//fprintf(code, "\ncase StmtK :\n");
+            genStmt(tree, code);
             break;
         case DeclKi:
-            //fprintf(stdout, "\ncase DeclK :\n");
-            genDecli(tree,code,codigoIntermediario);
+            //fprintf(code, "\ncase DeclK :\n");
+            genDecli(tree,code);
             break;
         case ExpressionK:
-		//fprintf(stdout, "\ncase ExpressionK :\n");
+		//fprintf(code, "\ncase ExpressionK :\n");
 
-            genExpression(tree, code,codigoIntermediario);
+            genExpression(tree, code);
 
             break;
         /*case ParamK:
-	        //fprintf(stdout, "\ncase ParamK :\n");
+	        //fprintf(code, "\ncase ParamK :\n");
             genParam(tree);
             break;*/
         default:
             break;
         }
-        cGen(tree->sibling, code,codigoIntermediario);
+        cGen(tree->sibling, code);
     }
 }
-
-static void cGenA( TreeNode * tree, FILE *code,lista *codigoIntermediario){
+static void cGenA( TreeNode * tree, FILE *code){
     if (tree != NULL)
     {
         //Verifica o tipo do no
@@ -513,21 +732,21 @@ static void cGenA( TreeNode * tree, FILE *code,lista *codigoIntermediario){
 
         //No para declaracoes
         /*case StmtK:
-        	//fprintf(stdout, "\ncase StmtK :\n");
+        	//fprintf(code, "\ncase StmtK :\n");
             genStmt(tree, code);
             break;*/
         case DeclKi:
-            //fprintf(stdout, "\ncase DeclK :\n");
-            genDecli(tree,code,codigoIntermediario);
+            //fprintf(code, "\ncase DeclK :\n");
+            genDecli(tree,code);
             break;
         case ExpressionK:
-		//fprintf(stdout, "\ncase ExpressionK :\n");
+		//fprintf(code, "\ncase ExpressionK :\n");
 
-            genExpression(tree, code,codigoIntermediario);
+            genExpression(tree, code);
 
             break;
         /*case ParamK:
-	        //fprintf(stdout, "\ncase ParamK :\n");
+	        //fprintf(code, "\ncase ParamK :\n");
             genParam(tree);
             break;*/
         default:
@@ -536,18 +755,14 @@ static void cGenA( TreeNode * tree, FILE *code,lista *codigoIntermediario){
     }
 }
 
-void codeGen(TreeNode * syntaxTree, char * codefile, FILE *code){   lista codigoIntermediario;
-    inicializaLIsta(&codigoIntermediario);
+void codeGen(TreeNode * syntaxTree, char * codefile, FILE *code){
+    l=malloc(sizeof(lista));
+    inicializaLista(l);
     char * s = malloc(strlen(codefile)+7); //Aloca mais 7 espaços para adicionar a string "File: " e o /0
     strcpy(s,"File: ");
     strcat(s,codefile); //concatena com o nome do arquivo de codigo intermediario
     fprintf(stdout,"\nCMINUS Compilation\n\n"); //imprime no terminal
-    //fprintf(listing,"Codigo Intermediario\n\n"); //imprime no arquivo
-    //fprintf(listing,"\nStandard prelude:");
-    //fprintf(listing,"\nEnd of standard prelude.");
-    //fprintf(listing,"\nCodigo Intermediario\n");
-    cGen(syntaxTree, code,&codigoIntermediario); //Funcao principal de geracao
-    /*fprintf(listing, "\nCodigo em quadra:\n" );
-    imprimeLista(&codigoIntermediario);*/
+    cGen(syntaxTree, code); //Funcao principal de geracao
     fprintf(listing,"\n\nEnd of execution.\n\n");
+    imprimeLista(l);
 }

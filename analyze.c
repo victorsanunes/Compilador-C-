@@ -3,7 +3,7 @@
 #include "analyze.h"
 #include <string.h>
 
-/* contador para a localização na memória da variável */
+/* contador para a localizaï¿½ï¿½o na memï¿½ria da variï¿½vel */
 static int location = 0;
 
 /*
@@ -14,10 +14,9 @@ static int location = 0;
  */
 static void traverse( TreeNode * t,
                       void (* preProc) (TreeNode *),
-                      void (* postProc) (TreeNode *) )
-{
-    if (t != NULL)
-    {preProc(t);
+                      void (* postProc) (TreeNode *) ){
+    if (t != NULL){
+        preProc(t);
         {int i;
          for (i=0; i < MAXCHILDREN; i++)
            traverse(t->child[i],preProc,postProc);
@@ -73,6 +72,7 @@ char * cat(char * s, char * v) //concatena s e v
  */
 static void insertNode( TreeNode * t)
 {
+    TreeNode *p1;
     switch (t->nodekind)
     {
     case DeclKi:
@@ -89,12 +89,12 @@ static void insertNode( TreeNode * t)
             {
                 declError(t, "Erro: variavel nao pode ser tipo void.");
             }
-            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1 ) 
+            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1 )
             {
                 declError(t, "Erro: variavel com mesmo nome de funcao.");
             }
             else if (st_lookup(cat(t->attr.name,t->escopo)) == -1) //correto, insere na tabela
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel);
+                        st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel);
             else
                 declError(t, "Erro: variavel ja declarada.");
             break;
@@ -105,8 +105,11 @@ static void insertNode( TreeNode * t)
             }
             else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
                 declError(t, "Erro: vetor com mesmo nome de funcao.");
-            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
+            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
                 st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor);
+                p1=t->child[0];
+                location = (int) p1->attr.val + location;
+            }
             else
                 declError(t, "Erro: vetor ja declarado.");
             break;
@@ -199,8 +202,8 @@ static void insertNode( TreeNode * t)
             break;
         case OpK:
             if (
-				(t->attr.op == MENOROUIGUAL) || (t->attr.op == MAIOR) || 
-				(t->attr.op == MENOR) || (t->attr.op == MAIOROUIGUAL) || 
+				(t->attr.op == MENOROUIGUAL) || (t->attr.op == MAIOR) ||
+				(t->attr.op == MENOR) || (t->attr.op == MAIOROUIGUAL) ||
 				(t->attr.op == EQ) || (t->attr.op == DIFERENTE)
 				)
                 t->tipo = Boolean;
@@ -223,17 +226,14 @@ static void insertNode( TreeNode * t)
 /* Function buildSymtab constructs the symbol
  * table by preorder traversal of the syntax tree
  */
-void buildSymtab(TreeNode * syntaxTree)
-{
+void buildSymtab(TreeNode * syntaxTree){
     st_insert_first(cat("input","input"), "input", 0,location++,"input", Integer, Funcao);
     st_insert_first(cat("output","output"), "output", 0,location++,"output", Void, Funcao);
     traverse(syntaxTree,insertNode,nullProc);
-    if(st_lookup(cat("main","main")) == -1)
-    {
+    if(st_lookup(cat("main","main")) == -1){
         declError(syntaxTree, "Erro: funcao main nao declarada.");
     }
-    if (TraceAnalyze)
-    {
+    if (TraceAnalyze){
         fprintf(listing,"\nSymbol table:\n\n");
         printSymTab(listing);
     }
@@ -316,16 +316,16 @@ static void checkNode(TreeNode * t)
             if (t->child[0]!=NULL)
             {
                 if (t->child[0]->tipo != t->tipo)
-                    typeError(t->child[0],"Erro: tipo de retorno não corresponde ao retorno da funcao.");
+                    typeError(t->child[0],"Erro: tipo de retorno nï¿½o corresponde ao retorno da funcao.");
             }
             else
             {
                 if(t->tipo!=Void)
                 {
-                    typeError(t,"Erro: tipo de retorno não corresponde ao retorno da funcao.");
+                    typeError(t,"Erro: tipo de retorno nï¿½o corresponde ao retorno da funcao.");
                 }
             }
-       
+
         }
         break;
     case DeclKi:

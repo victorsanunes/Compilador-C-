@@ -1,0 +1,30 @@
+int funcaoX(int x, int y){
+	int soma;
+	soma = x + y;
+	return soma; 
+}
+
+/*void main(void){
+	int c;
+	int n;
+	int next;
+	int first;
+	int second;
+	c = 0;
+    while(c <= n){
+        if(c <= 1)
+            next = c;
+        else{
+            next = first + second;
+            first = second;
+            second = first;
+        }
+        c = c + 1;
+    }
+}*/
+
+void main(void ){
+
+	int y;
+	y = funcaoX(10, 20);
+}

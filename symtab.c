@@ -3,8 +3,7 @@
 #include <string.h>
 #include "symtab.h"
 
-/* SIZE is the size of the hash table */
-#define SIZE 211
+
 
 /* SHIFT is the power of two used as multiplier
    in hash function  */
@@ -23,35 +22,9 @@
     return temp;
 }
 
-/* the list of line numbers of the source
- * code in which a variable is referenced
- */
-typedef struct LineListRec
-{
-    int lineno;
-    struct LineListRec * next;
-} * LineList;
 
-/* The record in the bucket lists for
- * each variable, including name,
- * assigned memory location, and
- * the list of line numbers in which
- * it appears in the source code
- */
-typedef struct BucketListRec
-{
-    char * name;
-    char * name2;
-    LineList lines;
-    int memloc ;
-    char * escopo;
-    TipType tipoId;
-    ExpType tipo;
-    struct BucketListRec * next;
-} * BucketList;
 
-/* the hash table */
-static BucketList hashTable[SIZE];
+
 
 /* Procedure st_insert inserts line numbers and
  * memory locations into the symbol table
@@ -64,6 +37,7 @@ void st_insert_first( char * name, char * name2, int lineno, int loc, char * esc
     BucketList l =  hashTable[h];
     while ((l != NULL) && (strcmp(name,l->name) != 0))
         l = l->next;
+
     l = (BucketList) malloc(sizeof(struct BucketListRec));
     l->name = name;
     l->name2 = name2;
@@ -72,6 +46,7 @@ void st_insert_first( char * name, char * name2, int lineno, int loc, char * esc
     l->tipoId=tipoId;
     l->lines = (LineList) malloc(sizeof(struct LineListRec));
     l->lines->lineno = lineno;
+    int posicaoDoParametro;
     l->memloc = loc;
     l->lines->next = NULL;
     l->next = hashTable[h];
@@ -108,7 +83,6 @@ int st_lookup ( char * name )
     if (l == NULL) return -1;
     else return l->memloc;
 }
-
 
 ExpType st_lookupTipo ( char * name )
 {

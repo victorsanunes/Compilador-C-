@@ -1,4 +1,5 @@
 #include "globals.h"
+#include "machineCode.h"
 
 /* set NO_PARSE to TRUE to get a scanner-only compiler */
 #define NO_PARSE FALSE
@@ -38,7 +39,7 @@ int TraceCode = FALSE;
 
 int Error = FALSE;
 
-void codeGen(TreeNode *syntaxTree,char *codefile, FILE *code);
+void codeGen(TreeNode * syntaxTree, char * codefile, FILE *code);
 
 int main( int argc, char * argv[] )
 {
@@ -90,6 +91,9 @@ int main( int argc, char * argv[] )
         }
         codeGen(syntaxTree,codefile, code);
         fclose(code);
+        machineCodeGen();
+
+
     }
 #endif
 #endif
@@ -97,4 +101,3 @@ int main( int argc, char * argv[] )
     fclose(source);
     return 0;
 }
-
