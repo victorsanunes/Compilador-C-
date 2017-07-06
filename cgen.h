@@ -8,5 +8,7 @@
  * file name as a comment in the code file
  */
 void codeGen(TreeNode * syntaxTree, char * codefile, FILE *code);
+int buscaMemlocDeParametro(char * escopo, int posicaoDoParametro);
+extern BucketList hashTable[SIZE];
 
 #endif

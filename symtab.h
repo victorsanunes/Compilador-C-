@@ -30,6 +30,7 @@
  {
     char * name;
     char * name2;
+    int posicaoDoParametro;
     LineList lines;
     int memloc ;
     char * escopo;
@@ -38,11 +39,12 @@
     struct BucketListRec * next;
  } * BucketList;
 
-void st_insert_first( char * name, char * name2, int lineno, int loc, char * escopo , ExpType tipo, TipType tipoId);
+void st_insert_first( char * name, char * name2, int lineno, int loc, char * escopo , ExpType tipo, TipType tipoId, int posicaoDoParametro);
 void st_insert( char * name, int lineno);
 char* st_lookupEscopo ( char * name );
 ExpType st_lookupTipo ( char * name );
 TipType st_lookupTipoId ( char * name );
+void setPosicaoDoParametro(char * escopo, int posicao);
 
 /* the hash table */
 BucketList hashTable[SIZE];

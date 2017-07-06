@@ -5,6 +5,7 @@
 
 /* contador para a localiza��o na mem�ria da vari�vel */
 static int location = 0;
+int posicaoDoParametro;
 
 /*
  * Procedure traverse is a generic recursive
@@ -70,88 +71,92 @@ char * cat(char * s, char * v) //concatena s e v
  * identifiers stored in t into
  * the symbol table
  */
-static void insertNode( TreeNode * t)
-{
+static void insertNode( TreeNode * t){
     TreeNode *p1;
-    switch (t->nodekind)
-    {
-    case DeclKi:
-        switch (t->kind.decl)
-        {
-        case FunK:
-            if (st_lookup(cat(t->attr.name,t->attr.name)) == -1)
-                st_insert_first(cat(t->attr.name,t->attr.name), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Funcao);
-            else
-                declError(t, "Erro: funcao ja declarada.");
-            break;
-        case VarK:
-            if (t->tipo==Void)
-            {
-                declError(t, "Erro: variavel nao pode ser tipo void.");
+
+    switch (t->nodekind){
+        case DeclKi:
+            posicaoDoParametro = 0;
+            switch (t->kind.decl){
+                case FunK:
+                    if (st_lookup(cat(t->attr.name,t->attr.name)) == -1){
+                        st_insert_first(cat(t->attr.name,t->attr.name), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Funcao, -1);
+                        posicaoDoParametro = 0;
+                    }
+
+                    else
+                        declError(t, "Erro: funcao ja declarada.");
+                    break;
+                case VarK:
+                    if (t->tipo==Void)
+                    {
+                        declError(t, "Erro: variavel nao pode ser tipo void.");
+                    }
+                    else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1 )
+                    {
+                        declError(t, "Erro: variavel com mesmo nome de funcao.");
+                    }
+                    else if (st_lookup(cat(t->attr.name,t->escopo)) == -1) //correto, insere na tabela
+                                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel, -1);
+                    else
+                        declError(t, "Erro: variavel ja declarada.");
+                    break;
+                case VetK:
+                    if (t->tipo==Void)
+                    {
+                        declError(t, "Erro: vetor nao pode ser tipo void.");
+                    }
+                    else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
+                        declError(t, "Erro: vetor com mesmo nome de funcao.");
+                    else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
+                        st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor, -1);
+
+                        p1 = t->child[0];
+                        //Calcula o deslocamento do vetor
+                        location = (int) p1->attr.val + location + 1;
+                    }
+                    else
+                        declError(t, "Erro: vetor ja declarado.");
+                    break;
+                default:
+                    break;
             }
-            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1 )
-            {
-                declError(t, "Erro: variavel com mesmo nome de funcao.");
-            }
-            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1) //correto, insere na tabela
-                        st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel);
-            else
-                declError(t, "Erro: variavel ja declarada.");
-            break;
-        case VetK:
-            if (t->tipo==Void)
-            {
-                declError(t, "Erro: vetor nao pode ser tipo void.");
-            }
-            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "Erro: vetor com mesmo nome de funcao.");
-            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor);
-                p1=t->child[0];
-                location = (int) p1->attr.val + location;
-            }
-            else
-                declError(t, "Erro: vetor ja declarado.");
-            break;
-        default:
-            break;
-        }
         break;
     case ParamK:
-        switch (t->kind.param)
-        {
-        case DeclK:
-            if (t->tipo==Void)
-            {
-                declError(t, "Erro: variavel nao pode ser tipo void.");
-            }
-            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "Erro: mesmo nome usado em funcao.");
-            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel);
-
-            else
-                declError(t, "Erro: nome ja utilizado em declaracao.");
-            break;
-        case DeclVK:
-            if (t->tipo==Void)
-            {
-                declError(t, "Erro: vetor nao pode ser tipo void.");
-            }
-            else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
-                declError(t, "Erro: vetor com mesmo nome de funcao.");
-            else if (st_lookup(cat(t->attr.name,t->escopo)) == -1)
-                st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor);
-            else
-                declError(t, "Erro: nome ja utilizado em declaracao.");
-            break;
-        default:
-            break;
+        switch (t->kind.param){
+            case DeclK:
+                if (t->tipo==Void) {
+                    declError(t, "Erro: variavel nao pode ser tipo void.");
+                }
+                else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
+                    declError(t, "Erro: mesmo nome usado em funcao.");
+                else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
+                    st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Variavel, posicaoDoParametro);
+                    posicaoDoParametro++;
+                }
+                else
+                    declError(t, "Erro: nome ja utilizado em declaracao.");
+                break;
+            case DeclVK:
+                if (t->tipo==Void){
+                    declError(t, "Erro: vetor nao pode ser tipo void.");
+                }
+                else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
+                    declError(t, "Erro: vetor com mesmo nome de funcao.");
+                else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
+                    st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor, posicaoDoParametro);
+                    posicaoDoParametro++;
+                }
+                else
+                    declError(t, "Erro: nome ja utilizado em declaracao.");
+                break;
+            default:
+                break;
         }
         break;
     case ExpressionK:
-        switch (t->kind.expression)
-        {
+        posicaoDoParametro = 0;
+        switch (t->kind.expression){
         case VariavelK:
             if (st_lookup(cat(t->attr.name,t->escopo)) == -1 && st_lookup(cat(t->attr.name,"programa")) == -1)
                 declError(t, "Erro: variavel nao declarada");
@@ -227,8 +232,8 @@ static void insertNode( TreeNode * t)
  * table by preorder traversal of the syntax tree
  */
 void buildSymtab(TreeNode * syntaxTree){
-    st_insert_first(cat("input","input"), "input", 0,location++,"input", Integer, Funcao);
-    st_insert_first(cat("output","output"), "output", 0,location++,"output", Void, Funcao);
+    st_insert_first(cat("input","input"), "input", 0,location++,"input", Integer, Funcao, -1);
+    st_insert_first(cat("output","output"), "output", 0,location++,"output", Void, Funcao, -1);
     traverse(syntaxTree,insertNode,nullProc);
     if(st_lookup(cat("main","main")) == -1){
         declError(syntaxTree, "Erro: funcao main nao declarada.");

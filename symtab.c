@@ -22,16 +22,12 @@
     return temp;
 }
 
-
-
-
-
 /* Procedure st_insert inserts line numbers and
  * memory locations into the symbol table
  * loc = memory location is inserted only the
  * first time, otherwise ignored
  */
-void st_insert_first( char * name, char * name2, int lineno, int loc, char * escopo , ExpType tipo, TipType tipoId)
+void st_insert_first( char * name, char * name2, int lineno, int loc, char * escopo , ExpType tipo, TipType tipoId, int posicaoDoParametro)
 {
     int h = hash(name);
     BucketList l =  hashTable[h];
@@ -42,11 +38,11 @@ void st_insert_first( char * name, char * name2, int lineno, int loc, char * esc
     l->name = name;
     l->name2 = name2;
     l->escopo = escopo;
-    l->tipo=tipo;
-    l->tipoId=tipoId;
+    l->tipo = tipo;
+    l->tipoId = tipoId;
     l->lines = (LineList) malloc(sizeof(struct LineListRec));
     l->lines->lineno = lineno;
-    int posicaoDoParametro;
+    l->posicaoDoParametro = posicaoDoParametro;
     l->memloc = loc;
     l->lines->next = NULL;
     l->next = hashTable[h];
@@ -113,8 +109,8 @@ TipType st_lookupTipoId ( char * name )
  */
 void printSymTab(FILE * listing)
 { int i;
-    fprintf(listing,"Nome id  Entrada   Tipo Dado  tipoID       Escopo         Numero linha\n");
-    fprintf(listing,"-------  -------   ---------  ------    -------------     ------------\n");
+    fprintf(listing,"Nome id  Entrada   Tipo Dado  tipoID       Escopo         Numero linha \n");
+    fprintf(listing,"-------  -------   ---------  ------    -------------     ------------ \n");
     for (i=0; i<SIZE; ++i)
     {if (hashTable[i] != NULL)
         { BucketList l = hashTable[i];
