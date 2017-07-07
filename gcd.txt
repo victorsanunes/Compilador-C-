@@ -1,23 +1,25 @@
-
-int foo(int x, int y, int z, int w){
-    int result;
-    result = 0;
-    while(result >= 0){
-        if(x < 2)
-            result = x + y;
-        if(y > 2)
-            result = result + y + z;
-        /*else
-            result = result * 3;
-        if(w <= 4){
-            if(z == 0)
-                return 0;
-            if(result != 0)
-                return result/(w - 1);
-        }*/
-    }
-}
 void main(void){
-    int vetor[2];
-    vetor[1] = foo(1, vetor[0], 3, 4);
+
+	int n;
+	int c;
+	int next;
+	int first;
+	int second;
+
+	n = 5; 
+	first = 0;
+	second = 1;
+	c = 0;
+	while(c <= n){
+		if(c <= 1)
+			next = c;
+		else{
+			next = first + second;
+			first = second;
+			second = next;
+		}
+		c = c + 1;
+	}
+
+	output(c);
 }

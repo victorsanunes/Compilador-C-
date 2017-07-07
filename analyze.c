@@ -109,7 +109,7 @@ static void insertNode( TreeNode * t){
                     else if (st_lookup(cat(t->attr.name,t->attr.name)) != -1)
                         declError(t, "Erro: vetor com mesmo nome de funcao.");
                     else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
-                        st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor, -1);
+                        st_insert_first(cat(t->attr.name, t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor, -1);
 
                         p1 = t->child[0];
                         //Calcula o deslocamento do vetor

@@ -610,7 +610,14 @@ static void genExpression(TreeNode * tree, FILE *code){
               if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK){
                 campo=3;
                 cGen(p1,code);
-                no.campo4=hash(concatena(tree->attr.name, tree->escopo));
+
+                if(hashTable[hash(concatena(tree->attr.name, tree->escopo))]==NULL){
+                  if(hashTable[hash(concatena(tree->attr.name,"programa"))] != NULL){
+                    no.campo4=hash(concatena(tree->attr.name, "programa"));
+                  }
+                }else{
+                  no.campo4=hash(concatena(tree->attr.name, tree->escopo));
+                }
                 no.flagCampo4=3;//hash
                 fprintf(code, ",%s)\n",tree->attr.name);
                 no.flagVetor = 1;
@@ -621,7 +628,13 @@ static void genExpression(TreeNode * tree, FILE *code){
                 cGen(p1,code);
                 no.campo3= indiceTemporario-1;
                 no.flagCampo3=1;//temporario
-                no.campo4=hash(concatena(tree->attr.name, tree->attr.name));
+                if(hashTable[hash(concatena(tree->attr.name, tree->escopo))]==NULL){
+                  if(hashTable[hash(concatena(tree->attr.name,"programa"))] != NULL){
+                    no.campo4=hash(concatena(tree->attr.name, "programa"));
+                  }
+                }else{
+                  no.campo4=hash(concatena(tree->attr.name, tree->escopo));
+                }
                 no.flagCampo4=3;//hash
                 no.flagVetor = 1;
                 insereFinal(l,no);
@@ -631,7 +644,13 @@ static void genExpression(TreeNode * tree, FILE *code){
             else{ // caso o vetor seja somado
               if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK){
                 no.campo1="asg";
-                no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                if(hashTable[hash(concatena(tree->attr.name, tree->escopo))]==NULL){
+                  if(hashTable[hash(concatena(tree->attr.name,"programa"))] != NULL){
+                    no.campo2=hash(concatena(tree->attr.name, "programa"));
+                  }
+                }else{
+                  no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                }
                 no.flagCampo2=3;//hash
                 campo=3;
                 cGen(p1,code);
@@ -644,7 +663,13 @@ static void genExpression(TreeNode * tree, FILE *code){
               }else{
                 cGen(p1,code);
                 no.campo1="asg";
-                no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                if(hashTable[hash(concatena(tree->attr.name, tree->escopo))]==NULL){
+                  if(hashTable[hash(concatena(tree->attr.name,"programa"))] != NULL){
+                    no.campo2=hash(concatena(tree->attr.name, "programa"));
+                  }
+                }else{
+                  no.campo2=hash(concatena(tree->attr.name, tree->escopo));
+                }
                 no.flagCampo2=3;//hash
                 no.campo3=indiceTemporario-1;
                 no.flagCampo3=1;//temporario
