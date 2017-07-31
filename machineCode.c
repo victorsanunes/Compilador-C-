@@ -1359,8 +1359,8 @@ void machineCodeGen(){
 			}
 
 			elemento2->campo2 = reg3;
-			elemento2->campo3 = reg2;
-			elemento2->campo4 = reg1;
+			elemento2->campo3 = reg1;
+			elemento2->campo4 = reg2;
 			elemento2->flagCampo2 = 7;
 			elemento2->flagCampo3 = 7;
 			elemento2->flagCampo4 = 7;
@@ -2547,7 +2547,7 @@ void machineCodeGen(){
 						if(b == NULL){
 							return;
 						}
-						elemento2->campo1 = "LOAD"; 
+						elemento2->campo1 = "LOAD";
 						elemento2->campo4 = b->memloc;
 						inputMemloc = b->memloc;
 						// elemento2->campo4 = 5000;
