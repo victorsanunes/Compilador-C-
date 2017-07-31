@@ -1,7 +1,7 @@
+void f(int a){}
+
 void main(void){
-	int s;
-	int v[5];
-	v[3] = 500 + 1;
-	s = v[3] + 1;
-	output(s); 
+int x;
+input(x);
+f(x);
 }

@@ -272,14 +272,13 @@ void machineCodeGen(){
 	int flagDiferente = -1; //flag para instrucao de igual e diferente
 	int regOutput = -1;
 	int regInput = -1;
+	int inputMemloc = -1;
 	//Gera o primeiro codigo objeto
 	printf("\n\nCÓDIGO OBJETO 1\n");
 	posicaoDeFuncoes[123] = 6; // Posicao da output()
 	posicaoDeFuncoes[13] = 3; // Posicao do input()
 	while(p != NULL){
 		if(!strcmp(p->campo1, "lab")){
-
-
 			// if(funcaoComRetorno == -1 ){
 			// 	funcaoComRetorno = 2;
 			// }
@@ -2113,9 +2112,6 @@ void machineCodeGen(){
 			insereFinal(codigo_de_maquina, *elemento2);
 			posicaoMemoriaDeInstrucoes++;
 
-
-			// @TODO: corrigir os reg de comparacao
-
 			elemento2->campo1 = "BNE";
 			elemento2->campo2 = reg5;
 			elemento2->flagCampo2 = 7;
@@ -2523,75 +2519,95 @@ void machineCodeGen(){
 		}
 
 		else if(!strcmp(p->campo1, "param")){
+			aux = p->prox;
 
-			switch (p->flagCampo2) {
+			//Checa se depois do parametro NAO sera uma chamada da funcao input()
+			// caso seja, devera gerar a instrucao de LOAD de maneira diferente
+			if(aux->campo2 != 13){
 
-				case 2:
-					elemento2->campo1 = "LOADI";
-					elemento2->campo4 = p->campo2;
-					elemento2->flagCampo4 = 2;
-					elemento2->flagCampo3 = 0;
-					elemento2->campo3 = 0;
-					reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
-					if(reg1 != -1){
-						elemento2->campo2 = reg1;
-						setRegistradorUsado(bancoDeRegistradores, reg1);
-						elemento2->flagCampo2 = 7;
-						insereFinal(codigo_de_maquina, *elemento2);
-						posicaoMemoriaDeInstrucoes++;
-					}
+				switch (p->flagCampo2) {
+					case 2:
+						elemento2->campo1 = "LOADI";
+						elemento2->campo4 = p->campo2;
+						elemento2->flagCampo4 = 2;
+						elemento2->flagCampo3 = 0;
+						elemento2->campo3 = 0;
+						reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+						if(reg1 != -1){
+							elemento2->campo2 = reg1;
+							setRegistradorUsado(bancoDeRegistradores, reg1);
+							elemento2->flagCampo2 = 7;
+							insereFinal(codigo_de_maquina, *elemento2);
+							posicaoMemoriaDeInstrucoes++;
+						}
+						break;
+					case 3:
+						hashIndex = p->campo2;
+						b = hashTable[hashIndex];
+						if(b == NULL){
+							return;
+						}
+						elemento2->campo1 = "LOAD"; 
+						elemento2->campo4 = b->memloc;
+						inputMemloc = b->memloc;
+						// elemento2->campo4 = 5000;
+						elemento2->flagCampo4 = 8;
+						elemento2->flagCampo3 = 0;
+						elemento2->campo3 = 0;
+						reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+						if(reg1 != -1){
+							elemento2->campo2 = reg1;
+							setRegistradorUsado(bancoDeRegistradores, reg1);
+							elemento2->flagCampo2 = 7;
+							insereFinal(codigo_de_maquina, *elemento2);
+							posicaoMemoriaDeInstrucoes++;
+						}
+						// imprimeQuadra(elemento2);
+						quadraReset(elemento2);
+						break;
+				}
 
+				switch (p->flagCampo4) {
+					case 8:
 
-
-					break;
-				case 3:
-					hashIndex = p->campo2;
-					b = hashTable[hashIndex];
-					if(b == NULL){
-						return;
-					}
-					elemento2->campo1 = "LOAD";
-					elemento2->campo4 = b->memloc;
-					// elemento2->campo4 = 5000;
-					elemento2->flagCampo4 = 8;
-					elemento2->flagCampo3 = 0;
-					elemento2->campo3 = 0;
-					reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
-					if(reg1 != -1){
-						elemento2->campo2 = reg1;
-						setRegistradorUsado(bancoDeRegistradores, reg1);
-						elemento2->flagCampo2 = 7;
-						insereFinal(codigo_de_maquina, *elemento2);
-						posicaoMemoriaDeInstrucoes++;
-					}
-					// imprimeQuadra(elemento2);
-					quadraReset(elemento2);
-					break;
+						break;
+				}
+				regOutput = reg1;
+				regInput = reg1;
+				elemento2->campo1 = "STORE";
+				elemento2->campo2 = reg1;
+				elemento2->campo3 = 0;
+				elemento2->flagCampo2 = 7;
+				elemento2->flagCampo3 = 0;
+				elemento2->campo4 = p->campo4;
+				elemento2->flagCampo4 = 8;
+				insereFinal(codigo_de_maquina, *elemento2);
+				posicaoMemoriaDeInstrucoes++;
+				setRegistradorLivre(bancoDeRegistradores, reg1);
+				// imprimeQuadra(elemento2);
+				quadraReset(elemento2);
 			}
 
-			switch (p->flagCampo4) {
-				case 8:
+			// Caso a proxima instrucao seja uma chamada da funcao input()
+			else{
+				switch (p->flagCampo2) {
+					case 1:
+						inputMemloc = p->campo2;
+						break;
+					case 3:
+						hashIndex = p->campo2;
+						b = hashTable[hashIndex];
+						inputMemloc = b->memloc;
 
-					break;
+						break;
+				}
 			}
-			regOutput = reg1;
-			elemento2->campo1 = "STORE";
-			elemento2->campo2 = reg1;
-			elemento2->campo3 = 0;
-			elemento2->flagCampo2 = 7;
-			elemento2->flagCampo3 = 0;
-			elemento2->campo4 = p->campo4;
-			elemento2->flagCampo4 = 8;
-			insereFinal(codigo_de_maquina, *elemento2);
-			posicaoMemoriaDeInstrucoes++;
-			setRegistradorLivre(bancoDeRegistradores, reg1);
-			// imprimeQuadra(elemento2);
-			quadraReset(elemento2);
 		}
-
 		else if(!strcmp(p->campo1, "call")){
 
 			chamadaDeFuncao = 1;
+
+			//Chamada da funcao output()
 			if(p->campo2 == 123){
 				elemento2->campo1 = "MOVE";
 				elemento2->campo2 = fimDoBancoDeRegistradores;
@@ -2606,18 +2622,6 @@ void machineCodeGen(){
 
 			}
 
-			if(p->campo2 == 13){
-				elemento2->campo1 = "MOVE";
-				elemento2->campo2 = fimDoBancoDeRegistradores;
-				elemento2->campo3 = 0;
-				elemento2->campo4 = regInput;
-				elemento2->flagCampo2 = 7;
-				elemento2->flagCampo3 = 0;
-				elemento2->flagCampo4 = 7;
-				insereFinal(codigo_de_maquina, *elemento2);
-				posicaoMemoriaDeInstrucoes++;
-				regInput = -1;
-			}
 			//Carrega o valor a ser gravado na memoria em um registrador
 			// elemento2->campo1 = "LOADI end de ret";
 			elemento2->campo1 = "LOADI";
@@ -2730,6 +2734,21 @@ void machineCodeGen(){
 					registradoresTemporarios[p->campo4] = reg1;
 					break;
 			}
+		}
+		//Chamada da funcao input()
+		if(p->campo2 == 13){
+			// elemento2->campo1 = "STORE do input";
+			elemento2->campo1 = "STORE";
+			elemento2->campo2 = fimDoBancoDeRegistradores;
+			elemento2->campo3 = 0;
+			elemento2->campo4 = inputMemloc;
+			elemento2->flagCampo2 = 7;
+			elemento2->flagCampo3 = 0;
+			elemento2->flagCampo4 = 8;
+			insereFinal(codigo_de_maquina, *elemento2);
+			posicaoMemoriaDeInstrucoes++;
+			quadraReset(elemento2);
+
 		}
 
 		else if(!strcmp(p->campo1, "ret")){
