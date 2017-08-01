@@ -988,7 +988,7 @@ void machineCodeGen(){
 				//Hash
 				case 3:
 					elemento2->campo1 = "LOAD";
-					hashIndex = p->campo2;
+					hashIndex = p->campo3;
 					b = hashTable[hashIndex];
 					elemento2->campo4 = b->memloc;
 					elemento2->flagCampo4 = 8;
@@ -1293,11 +1293,21 @@ void machineCodeGen(){
 
 				//Hash
 				case 3:
+					elemento2->campo1 = "LOAD";
 					hashIndex = p->campo3;
 					b = hashTable[hashIndex];
-					if(b != NULL)
-						printf("tem gente\n" );
-					printf("\n--%d--\n", b->memloc);
+					elemento2->campo4 = b->memloc;
+					elemento2->flagCampo4 = 8;
+					elemento2->flagCampo3 = 0;
+					elemento2->campo3 = 0;
+					reg2 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+					if(reg2 != -1){
+						elemento2->flagCampo2 = 7;
+						elemento2->campo2 = reg2;
+						setRegistradorUsado(bancoDeRegistradores, reg2);
+						insereFinal(codigo_de_maquina, *elemento2);
+						posicaoMemoriaDeInstrucoes++;
+					}
 					break;
 				//Char
 				case 4:
@@ -1351,7 +1361,7 @@ void machineCodeGen(){
 			}
 
 			if(!strcmp(p->campo1, "menor")){
-				elemento2->campo1 = "SLT";
+				elemento2->campo1 = "---SLT";
 				flagDiferente = 1;
 			}
 			else if(!strcmp(p->campo1, "maior")){
