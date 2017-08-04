@@ -153,7 +153,7 @@ void binaryConverter(lista *l){
 			printf("5'd%d, ", p->campo4);
 			printf("5'd%d, ", p->campo2);
 			printf("17'd0 ");
-			comentario = " // STORER RS, RD --> Mem[RD[]] = RS[]";
+			comentario = " // STORER RD, RS --> Mem[RD[]] = RS[]";
 		}
 		else if(!strcmp(p->campo1, "LOADR")){
 			printf("%s, ", LOADR);
@@ -1361,7 +1361,7 @@ void machineCodeGen(){
 			}
 
 			if(!strcmp(p->campo1, "menor")){
-				elemento2->campo1 = "---SLT";
+				elemento2->campo1 = "SLT";
 				flagDiferente = 1;
 			}
 			else if(!strcmp(p->campo1, "maior")){
@@ -2722,6 +2722,8 @@ void machineCodeGen(){
 			//Indica o temporario para armezenar o retorno
 			switch (p->flagCampo4) {
 				case 1:
+
+					inputMemloc = p->campo4;
 					///funcaoComRetorno = 1;
 					// reg1 = registradoresTemporarios[p->campo2];
 					elemento2->campo1 = "MOVE";
