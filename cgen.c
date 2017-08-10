@@ -33,6 +33,7 @@ int contparam = 0;
 int contparam_aux;
 int auxVetR = 0;
 int memlocParametro = -1;
+int vetorPorReferencia = -1;
 
 int hash ( char * key ){
     int temp = 0;
@@ -606,6 +607,17 @@ static void genExpression(TreeNode * tree, FILE *code){
         case VetorK:
           p1 = tree->child[0];
           if(p1 != NULL){
+            // Checa se o vetor não está na main() para fazer passagem de
+            // parametro por referencia, quando um vetor for parametro
+            // de uma funcao
+            if(strcmp(tree->escopo, "main")){
+                vetorPorReferencia = 1;
+            }
+
+            // Escopo do vetor eh a main()
+            else{
+                vetorPorReferencia = 0;
+            }
             if(auxVetR == 1){ // caso o vetor recebe
               if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK){
                 campo=3;

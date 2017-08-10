@@ -113,7 +113,7 @@ static void insertNode( TreeNode * t){
 
                         p1 = t->child[0];
                         //Calcula o deslocamento do vetor
-                        location = (int) p1->attr.val + location + 1;
+                        location = (int) p1->attr.val + location;
                     }
                     else
                         declError(t, "Erro: vetor ja declarado.");

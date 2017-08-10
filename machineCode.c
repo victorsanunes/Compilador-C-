@@ -470,7 +470,6 @@ void machineCodeGen(){
 					break;
 			}
 		}
-
 		else if(!strcmp(p->campo1, "asg")){
 
 			switch (p->flagCampo2) {
@@ -757,7 +756,6 @@ void machineCodeGen(){
 				setRegistradorLivre(bancoDeRegistradores, reg3);
 			}
 		}
-
 		else if(!strcmp(p->campo1, "igual")){
 
 			switch (p->flagCampo2) {
@@ -894,7 +892,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg1);
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 		}
-
 		else if( (!strcmp(p->campo1, "menorI")) || (!strcmp(p->campo1, "maiorI")) ){
 
 			switch (p->flagCampo2) {
@@ -1072,7 +1069,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg1);
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 		}
-
 		else if(!strcmp(p->campo1, "dif")){
 			flagDiferente = 0;
 			switch (p->flagCampo2) {
@@ -1215,7 +1211,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 
 		}
-
 		else if((!strcmp(p->campo1, "menor")) ||  (!strcmp(p->campo1, "maior")) ){
 
 			switch (p->flagCampo2) {
@@ -1381,7 +1376,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 
 		}
-
 		// else if(!strcmp(p->campo1, "maior")){
 		//
 		// 	switch (p->flagCampo2) {
@@ -1486,7 +1480,6 @@ void machineCodeGen(){
 		// 			break;
 		// 	}
 		// }
-
 		else if(!strcmp(p->campo1, "sum") || !strcmp(p->campo1, "sub")){
 
 			switch (p->flagCampo2) {
@@ -1644,8 +1637,8 @@ void machineCodeGen(){
 			}
 
 			elemento2->campo2 = reg3;
-			elemento2->campo3 = reg2;
-			elemento2->campo4 = reg1;
+			elemento2->campo3 = reg1;
+			elemento2->campo4 = reg2;
 			elemento2->flagCampo2 = 7;
 			elemento2->flagCampo3 = 7;
 			elemento2->flagCampo4 = 7;
@@ -1655,7 +1648,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 
 		}
-
 		else if(!strcmp(p->campo1, "mul")){
 
 			switch (p->flagCampo2) {
@@ -1901,7 +1893,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg5);
 
 		}
-
 		else if(!strcmp(p->campo1, "div")){
 
 			switch (p->flagCampo2) {
@@ -2144,7 +2135,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 
 		}
-
 		/*
 		else if(!strcmp(p->campo1, "div")){
 
@@ -2251,7 +2241,6 @@ void machineCodeGen(){
 			}
 		}
 		*/
-
 		else if(!strcmp(p->campo1, "if_f")){
 			switch (p->flagCampo2) {
 				//Vazio
@@ -2398,7 +2387,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 			setRegistradorLivre(bancoDeRegistradores, reg3);
 		}
-
 		else if(!strcmp(p->campo1, "got")){
 
 			switch (p->flagCampo2) {
@@ -2527,7 +2515,6 @@ void machineCodeGen(){
 					break;
 			}
 		}
-
 		else if(!strcmp(p->campo1, "param")){
 			aux = p->prox;
 
@@ -2579,6 +2566,7 @@ void machineCodeGen(){
 
 				switch (p->flagCampo4) {
 					case 8:
+						// @TODO: tratar o caso do vetor por referencia
 
 						break;
 				}

@@ -20,6 +20,6 @@ int fibonacci(int n){
 }
 void main(void){
     int n;
-    n = 8;
+    n = 5;
     output(fibonacci(n));
 }
