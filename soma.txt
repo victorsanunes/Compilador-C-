@@ -1,11 +1,8 @@
-void sort(void){
-    int num[4];
-    num[3] = 45;
+int foo(void){
+  output(456);
+  return 0;
 }
 void main(void){
-    int vetor[4];
-    int x;
-    x = 3;
-    vetor[x] = 256;
-    sort();
+    int r;
+    r = foo();
 }
