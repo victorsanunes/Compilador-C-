@@ -145,6 +145,7 @@ static void insertNode( TreeNode * t){
                     declError(t, "Erro: vetor com mesmo nome de funcao.");
                 else if (st_lookup(cat(t->attr.name,t->escopo)) == -1){
                     st_insert_first(cat(t->attr.name,t->escopo), t->attr.name, t->lineno,location++,t->escopo, t->tipo, Vetor, posicaoDoParametro);
+                    location++;
                     posicaoDoParametro++;
                 }
                 else

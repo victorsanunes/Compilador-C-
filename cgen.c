@@ -190,6 +190,7 @@ int checaSymbol(TreeNode *tree, FILE *code){
 }
 static void genStmt(TreeNode * tree, FILE *code){
     TreeNode *condicao_do_if, *corpo_do_if, *corpo_do_else,*corpo_do_while,*condicao_do_while, *sentenca_return;
+
     switch (tree->kind.stmt) {
         case IfK:
             condicao_do_if  = tree->child[0];
@@ -206,6 +207,7 @@ static void genStmt(TreeNode * tree, FILE *code){
                 no.flagCampo4=0;//vazio
                 no.prox=NULL;
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, "(if_f,t%d,L%d,_)\n",indiceTemporario-1,contadorDeLinha);
                 contadorDeLinhaIF++;
@@ -225,6 +227,7 @@ static void genStmt(TreeNode * tree, FILE *code){
                   no.flagCampo4=0;//vazio
                   no.prox=NULL;
                   no.flagVetor = 0;
+                  no.vetorPorReferencia = -1;
                   insereFinal(l,no);
                   fprintf(code, "(got,L%d,_,_)\n", indicadorDeLinhaElse[contadorDeLinhaElse]);
                 }
@@ -237,6 +240,7 @@ static void genStmt(TreeNode * tree, FILE *code){
                 no.flagCampo4=0;//vazio
                 no.prox=NULL;
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, "(lab,L%d,_,_)\n",indicadorDeLinhaIF[contadorDeLinhaIF]);
                 if(corpo_do_else!=NULL){
@@ -250,6 +254,7 @@ static void genStmt(TreeNode * tree, FILE *code){
                   no.flagCampo4=0;//vazio
                   no.prox=NULL;
                   no.flagVetor = 0;
+                  no.vetorPorReferencia = -1;
                   insereFinal(l,no);
                   fprintf(code, "(lab,L%d,_,_)\n",indicadorDeLinhaElse[contadorDeLinhaElse]);
                     contadorDeLinhaElse--;
@@ -270,6 +275,7 @@ static void genStmt(TreeNode * tree, FILE *code){
             no.flagCampo4=0;//vazio
             no.prox=NULL;
             no.flagVetor = 0;
+            no.vetorPorReferencia = -1;
             insereFinal(l,no);
             fprintf(code, "(lab,L%d,_,_)\n",contadorDeLinha);
             contadorDeLinhaWhile1++;
@@ -285,6 +291,7 @@ static void genStmt(TreeNode * tree, FILE *code){
             no.flagCampo4=0;//vazio
             no.prox=NULL;
             no.flagVetor = 0;
+            no.vetorPorReferencia = -1;
             insereFinal(l,no);
             fprintf(code, "(if_f,t%d,L%d,_)\n",indiceTemporario-1,contadorDeLinha);
             contadorDeLinhaWhile2++;
@@ -300,6 +307,7 @@ static void genStmt(TreeNode * tree, FILE *code){
             no.flagCampo4=0;//vazio
             no.prox=NULL;
             no.flagVetor = 0;
+            no.vetorPorReferencia = -1;
             insereFinal(l,no);
             fprintf(code, "(got,L%d,_,_)\n",indicadorDeLinhaWhile1[contadorDeLinhaWhile1]);
             contadorDeLinhaWhile1--;
@@ -312,6 +320,7 @@ static void genStmt(TreeNode * tree, FILE *code){
             no.flagCampo4=0;//vazio
             no.prox=NULL;
             no.flagVetor = 0;
+            no.vetorPorReferencia = -1;
             insereFinal(l,no);
             fprintf(code, "(lab,L%d,_,_)\n",  indicadorDeLinhaWhile2[contadorDeLinhaWhile2]);
             contadorDeLinhaWhile2--;
@@ -331,6 +340,7 @@ static void genStmt(TreeNode * tree, FILE *code){
                 no.flagCampo4=0;//vazio
                 no.prox=NULL;
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, ",_,_)\n");
               }else{
@@ -344,6 +354,7 @@ static void genStmt(TreeNode * tree, FILE *code){
                 no.flagCampo4=0;//vazio
                 no.prox=NULL;
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, "(ret,t%d,_,_)\n",indiceTemporario-1);
               }
@@ -353,10 +364,30 @@ static void genStmt(TreeNode * tree, FILE *code){
 }
 static void genDecli(TreeNode * tree, FILE *code){
     TreeNode *p1, *p2, *p3;
+    no.vetorPorReferencia = -1;
     switch (tree->kind.decl) {
         case VarK:
           break;
         case VetK:
+
+            no.campo1 = "vet";
+            if(hashTable[hash(concatena(tree->attr.name, tree->escopo))]==NULL){
+                if(hashTable[hash(concatena(tree->attr.name,"programa"))] != NULL){
+                    no.campo4 = hash(concatena(tree->attr.name, "programa"));
+                }
+            }
+            else{
+                no.campo2 = hash(concatena(tree->attr.name, tree->escopo));
+            }
+            no.campo3 = 0;
+            no.campo4 = 0;
+            no.flagCampo2 = 3;
+            no.flagCampo3 = 0;
+            no.flagCampo4 = 0;
+            no.flagVetor = 0;
+            no.vetorPorReferencia = -1;
+            insereFinal(l, no);
+
           break;
         case FunK:
             no.campo1="lab";
@@ -369,6 +400,7 @@ static void genDecli(TreeNode * tree, FILE *code){
             no.flagCampo4=0;//vazio
             no.prox=NULL;
             no.flagVetor = 0;
+            no.vetorPorReferencia = -1;
             insereFinal(l,no);
             fprintf(code,"(lab,%d,_,_)\n",hash(concatena(tree->attr.name, tree->attr.name)));//apagar
             cGen(tree->child[1],code);
@@ -377,6 +409,7 @@ static void genDecli(TreeNode * tree, FILE *code){
 }
 static void genExpression(TreeNode * tree, FILE *code){
     TreeNode *p1, *p2, *p3;
+    no.vetorPorReferencia = -1;
     switch (tree->kind.expression) {
         case ConstK:
           if(tree != NULL){
@@ -413,6 +446,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4 =indiceTemporario;
                 no.flagCampo4=1;//temporario
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code,",t%d)\n",indiceTemporario );
                 indiceTemporario++;
@@ -428,6 +462,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                     no.campo4=indiceTemporario;
                     no.flagCampo4 =1;//temporario
                     no.flagVetor = 0;
+                    no.vetorPorReferencia = -1;
                     insereFinal(l,no);
                     fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );//code
                     indiceTemporario++;
@@ -443,6 +478,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                     no.campo4=indiceTemporario;
                     no.flagCampo4 =1;//temporario
                     no.flagVetor = 0;
+                    no.vetorPorReferencia = -1;
                     insereFinal(l,no);
                     fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );//code
                     indiceTemporario++;
@@ -457,6 +493,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4 =1;//temporario
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );
                 indiceTemporario++;
@@ -471,6 +508,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4 =1;//temporario
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, ",t%d,t%d)\n",indiceTemporario-1,indiceTemporario );
                 indiceTemporario++;
@@ -485,6 +523,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4 =1;//temporario
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
                 indiceTemporario++;
@@ -499,6 +538,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4 =1;//temporario
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
                 indiceTemporario++;
@@ -514,6 +554,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4 =1;//temporario
                 no.flagVetor = 0;
+                no.vetorPorReferencia = -1;
                 insereFinal(l,no);
                 fprintf(code, "(%s,t%d,t%d,t%d)\n",printSymbol(tree,code),indiceTemporario-2,indiceTemporario-1,indiceTemporario);
                 indiceTemporario++;
@@ -610,14 +651,7 @@ static void genExpression(TreeNode * tree, FILE *code){
             // Checa se o vetor não está na main() para fazer passagem de
             // parametro por referencia, quando um vetor for parametro
             // de uma funcao
-            if(strcmp(tree->escopo, "main")){
-                vetorPorReferencia = 1;
-            }
 
-            // Escopo do vetor eh a main()
-            else{
-                vetorPorReferencia = 0;
-            }
             if(auxVetR == 1){ // caso o vetor recebe
               if(p1->kind.expression == ConstK || p1->kind.expression == VariavelK){
                 campo=3;
@@ -633,6 +667,16 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.flagCampo4=3;//hash
                 fprintf(code, ",%s)\n",tree->attr.name);
                 no.flagVetor = 1;
+                if(strcmp(tree->escopo, "main")){
+                    vetorPorReferencia = 1;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
+
+                // Escopo do vetor eh a main()
+                else{
+                    vetorPorReferencia = 0;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
                 insereFinal(l,no);
                 auxVetR=0;
               }
@@ -649,6 +693,16 @@ static void genExpression(TreeNode * tree, FILE *code){
                 }
                 no.flagCampo4=3;//hash
                 no.flagVetor = 1;
+                if(strcmp(tree->escopo, "main")){
+                    vetorPorReferencia = 1;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
+
+                // Escopo do vetor eh a main()
+                else{
+                    vetorPorReferencia = 0;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
                 insereFinal(l,no);
               }
             }
@@ -669,6 +723,16 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4=1;//temporario
                 no.flagVetor = 2;
+                if(strcmp(tree->escopo, "main")){
+                    vetorPorReferencia = 1;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
+
+                // Escopo do vetor eh a main()
+                else{
+                    vetorPorReferencia = 0;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
                 insereFinal(l,no);
                 indiceTemporario++;
                 auxVetR=0;
@@ -688,6 +752,16 @@ static void genExpression(TreeNode * tree, FILE *code){
                 no.campo4=indiceTemporario;
                 no.flagCampo4=1;//temporario
                 no.flagVetor = 2;
+                if(strcmp(tree->escopo, "main")){
+                    vetorPorReferencia = 1;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
+
+                // Escopo do vetor eh a main()
+                else{
+                    vetorPorReferencia = 0;
+                    no.vetorPorReferencia = vetorPorReferencia;
+                }
                 insereFinal(l,no);
                 indiceTemporario++;
             }
@@ -740,6 +814,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                         contparam_aux++;
                         no.flagCampo4=8;//vazio
                         no.flagVetor = 0;
+                        no.vetorPorReferencia = -1;
                         insereFinal(l,no);
                        	fprintf(code,"(param,t%d,_,_)\n",(indiceTemporario-1));
                         p1=p1->sibling;
@@ -758,6 +833,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                         contparam_aux++;
                         no.flagCampo4=8;//vazio
                         no.flagVetor = 0;
+                        no.vetorPorReferencia = -1;
                         insereFinal(l,no);
                         fprintf(code,"(param,%s,_,_)\n",p1->attr.name);
                       	p1=p1->sibling;
@@ -773,6 +849,7 @@ static void genExpression(TreeNode * tree, FILE *code){
               no.campo4=0;
               no.flagCampo4=0;//vazio
               no.flagVetor = 0;
+              no.vetorPorReferencia = -1;
               insereFinal(l,no);
 		  	      fprintf(code,"(call,%d,%d,_)\n",hash(concatena(tree->attr.name, tree->escopo)),pilhaQntArgumento[topoPilha]);
               pilhaQntArgumento[topoPilha]=0;
@@ -788,6 +865,7 @@ static void genExpression(TreeNode * tree, FILE *code){
                  no.campo4=indiceTemporario;
                  no.flagCampo4=1;//vazio
                  no.flagVetor = 0;
+                 no.vetorPorReferencia = -1;
                  insereFinal(l,no);
 		  	         fprintf(code,"(call,%d,%d,t%d)\n",hash(concatena(tree->attr.name, tree->escopo)),pilhaQntArgumento[topoPilha],indiceTemporario);
                  pilhaQntArgumento[topoPilha]=0;

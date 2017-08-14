@@ -273,8 +273,9 @@ void machineCodeGen(){
 	int regOutput = -1;
 	int regInput = -1;
 	int inputMemloc = -1;
+	int vetorPorReferencia = -1;
 	//Gera o primeiro codigo objeto
-	printf("\n\nCÓDIGO OBJETO 1\n");
+	// printf("\n\nCÓDIGO OBJETO 1\n");
 	posicaoDeFuncoes[123] = 6; // Posicao da output()
 	posicaoDeFuncoes[13] = 3; // Posicao do input()
 	while(p != NULL){
@@ -570,7 +571,13 @@ void machineCodeGen(){
 				case 2:
 					//Carrega a constante em um reg
 					elemento2->campo1 = "LOADI";
-					elemento2->campo4 = p->campo3;
+					if(p->flagVetor == 1){
+						elemento2->campo4 = p->campo3 + 1;
+					}
+					else{
+						elemento2->campo4 = p->campo3;
+					}
+
 					elemento2->flagCampo4 = 2;
 					elemento2->campo3 = 0;
 					elemento2->flagCampo3 = 0;
@@ -689,34 +696,86 @@ void machineCodeGen(){
 
 			}
 			else if(p->flagVetor == 1){
-				//Calcula o descolamento
-				elemento2->campo1 = "ADDI";
-				elemento2->campo4 = hashTable[p->campo4]->memloc;
-				elemento2->flagCampo4 = 8;
-				elemento2->campo3 = reg2;
-				elemento2->flagCampo3 = 7;
-				reg3 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
-				if(reg3 != -1){
+
+				// //Carrega a base do vetor
+				// elemento2->campo1 = "LOADI";
+				// elemento2->campo2 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+				// elemento2->campo3 = 0;
+				// elemento2->campo4 = hashTable[p->campo4]->memloc;
+				// elemento2->flagCampo2 = 7;
+				// elemento2->flagCampo3 = 0;
+				// elemento2->flagCampo4 = 8;
+				// insereFinal(codigo_de_maquina, *elemento2);
+				// posicaoMemoriaDeInstrucoes++;
+
+				if(p->vetorPorReferencia == 1){
+					elemento2->campo1 = "LOAD";
+					reg3 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
 					elemento2->campo2 = reg3;
-					setRegistradorUsado(bancoDeRegistradores, reg3);
+					elemento2->campo3 = 0;
+					elemento2->campo4 = hashTable[p->campo4]->memloc;
 					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 0;
+					elemento2->flagCampo4 = 8;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					setRegistradorUsado(bancoDeRegistradores, reg3);
+
+					//Calcula o descolamento
+					elemento2->campo1 = "ADD";
+					elemento2->campo2 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+					elemento2->campo3 = reg3;
+					elemento2->campo4 = reg2;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 7;
+					elemento2->flagCampo4 = 7;
 					insereFinal(codigo_de_maquina, *elemento2);
 					posicaoMemoriaDeInstrucoes++;
 					// quadraReset(elemento2);
-				}
 
-				elemento2->campo1 = "STORER";
-				elemento2->campo2 = reg3;
-				elemento2->campo3 = 0;
-				elemento2->campo4 = reg1;
-				elemento2->flagCampo2 = 7;
-				elemento2->flagCampo3 = 0;
-				elemento2->flagCampo4 = 7;
-				insereFinal(codigo_de_maquina, *elemento2);
-				posicaoMemoriaDeInstrucoes++;
-				setRegistradorLivre(bancoDeRegistradores, reg1);
-				setRegistradorLivre(bancoDeRegistradores, reg2);
-				setRegistradorLivre(bancoDeRegistradores, reg3);
+
+					elemento2->campo1 = "STORER";
+					elemento2->campo4 = reg1;
+					elemento2->campo3 = 0;
+					elemento2->campo2 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 0;
+					elemento2->flagCampo4 = 7;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					setRegistradorLivre(bancoDeRegistradores, reg3);
+
+				}
+				else if(p->vetorPorReferencia == 0){
+					//Calcula o descolamento
+					elemento2->campo1 = "ADDI";
+					elemento2->campo4 = hashTable[p->campo4]->memloc;
+					elemento2->flagCampo4 = 8;
+					elemento2->campo3 = reg2;
+					elemento2->flagCampo3 = 7;
+					reg3 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+					if(reg3 != -1){
+						elemento2->campo2 = reg3;
+						setRegistradorUsado(bancoDeRegistradores, reg3);
+						elemento2->flagCampo2 = 7;
+						insereFinal(codigo_de_maquina, *elemento2);
+						posicaoMemoriaDeInstrucoes++;
+						// quadraReset(elemento2);
+					}
+
+					elemento2->campo1 = "STORER";
+					elemento2->campo2 = reg3;
+					elemento2->campo3 = 0;
+					elemento2->campo4 = reg1;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 0;
+					elemento2->flagCampo4 = 7;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					setRegistradorLivre(bancoDeRegistradores, reg1);
+					setRegistradorLivre(bancoDeRegistradores, reg2);
+					setRegistradorLivre(bancoDeRegistradores, reg3);
+				}
 			}
 
 			else if(p->flagVetor == 2){
@@ -741,8 +800,9 @@ void machineCodeGen(){
 				reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
 				setRegistradorUsado(bancoDeRegistradores, reg1);
 
+				//Load que carrega o dado na memoria do parametro
 				elemento2->campo1 = "LOADR";
-				elemento2->campo2 = reg1;
+				elemento2->campo2 = reg1; //Conterá o dado
 				elemento2->campo4 = reg3;
 				elemento2->campo3 = 0;
 				elemento2->flagCampo2 = 7;
@@ -754,6 +814,10 @@ void machineCodeGen(){
 				registradoresTemporarios[p->campo4] = reg1;
 				setRegistradorLivre(bancoDeRegistradores, reg2);
 				setRegistradorLivre(bancoDeRegistradores, reg3);
+				vetorPorReferencia = 1;
+
+				// elemento2->campo1 = "STORE";
+				// elemento2->campo2 =  ;
 			}
 		}
 		else if(!strcmp(p->campo1, "igual")){
@@ -1376,110 +1440,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 
 		}
-		// else if(!strcmp(p->campo1, "maior")){
-		//
-		// 	switch (p->flagCampo2) {
-		// 		//Vazio
-		// 		case 0:
-		// 			break;
-		// 		//Temporario
-		// 		case 1:
-		// 			break;
-		//
-		// 		//Constante
-		// 		case 2:
-		// 			break;
-		//
-		// 		//Hash
-		// 		case 3:
-		// 			hashIndex = p->campo2;
-		// 			b = hashTable[hashIndex];
-		// 			if(b != NULL)
-		// 				printf("tem gente\n" );
-		// 			printf("\n--%d--\n", b->memloc);
-		// 			break;
-		// 		//Char
-		// 		case 4:
-		// 			break;
-		// 		//Label
-		// 		case 5:
-		// 			break;
-		// 		//Quantidade de parametros
-		// 		case 6:
-		// 			break;
-		// 		//Inativo
-		// 		case -1:
-		// 			break;
-		// 	}
-		//
-		// 	switch (p->flagCampo3) {
-		// 		//Vazio
-		// 		case 0:
-		// 			break;
-		// 		//Temporario
-		// 		case 1:
-		// 			break;
-		//
-		// 		//Constante
-		// 		case 2:
-		// 			break;
-		//
-		// 		//Hash
-		// 		case 3:
-		// 			hashIndex = p->campo3;
-		// 			b = hashTable[hashIndex];
-		// 			if(b != NULL)
-		// 				printf("tem gente\n" );
-		// 			printf("\n--%d--\n", b->memloc);
-		// 			break;
-		// 		//Char
-		// 		case 4:
-		// 			break;
-		// 		//Label
-		// 		case 5:
-		// 			break;
-		// 		//Quantidade de parametros
-		// 		case 6:
-		// 			break;
-		// 		//Inativo
-		// 		case -1:
-		// 			break;
-		// 	}
-		//
-		// 	switch (p->flagCampo4) {
-		// 		//Vazio
-		// 		case 0:
-		// 			break;
-		// 		//Temporario
-		// 		case 1:
-		// 			break;
-		//
-		// 		//Constante
-		// 		case 2:
-		// 			break;
-		//
-		// 		//Hash
-		// 		case 3:
-		// 			hashIndex = p->campo4;
-		// 			b = hashTable[hashIndex];
-		// 			if(b != NULL)
-		// 				printf("tem gente\n" );
-		// 			printf("\na--%d--\n", b->memloc);
-		// 			break;
-		// 		//Char
-		// 		case 4:
-		// 			break;
-		// 		//Label
-		// 		case 5:
-		// 			break;
-		// 		//Quantidade de parametros
-		// 		case 6:
-		// 			break;
-		// 		//Inativo
-		// 		case -1:
-		// 			break;
-		// 	}
-		// }
 		else if(!strcmp(p->campo1, "sum") || !strcmp(p->campo1, "sub")){
 
 			switch (p->flagCampo2) {
@@ -2135,112 +2095,6 @@ void machineCodeGen(){
 			setRegistradorLivre(bancoDeRegistradores, reg2);
 
 		}
-		/*
-		else if(!strcmp(p->campo1, "div")){
-
-			switch (p->flagCampo2) {
-				//Vazio
-				case 0:
-					break;
-				//Temporario
-				case 1:
-					break;
-
-				//Constante
-				case 2:
-					break;
-
-				//Hash
-				case 3:
-					hashIndex = p->campo2;
-					b = hashTable[hashIndex];
-					if(b != NULL)
-						printf("tem gente\n" );
-					printf("\n--%d--\n", b->memloc);
-					break;
-				//Char
-				case 4:
-					break;
-				//Label
-				case 5:
-					break;
-				//Quantidade de parametros
-				case 6:
-					break;
-				//Inativo
-				case -1:
-					break;
-			}
-
-			switch (p->flagCampo3) {
-				//Vazio
-				case 0:
-					break;
-				//Temporario
-				case 1:
-					break;
-
-				//Constante
-				case 2:
-					break;
-
-				//Hash
-				case 3:
-					hashIndex = p->campo3;
-					b = hashTable[hashIndex];
-					if(b != NULL)
-						printf("tem gente\n" );
-					printf("\n--%d--\n", b->memloc);
-					break;
-				//Char
-				case 4:
-					break;
-				//Label
-				case 5:
-					break;
-				//Quantidade de parametros
-				case 6:
-					break;
-				//Inativo
-				case -1:
-					break;
-			}
-
-			switch (p->flagCampo4) {
-				//Vazio
-				case 0:
-					break;
-				//Temporario
-				case 1:
-					break;
-
-				//Constante
-				case 2:
-					break;
-
-				//Hash
-				case 3:
-					hashIndex = p->campo4;
-					b = hashTable[hashIndex];
-					if(b != NULL)
-						printf("tem gente\n" );
-					printf("\na--%d--\n", b->memloc);
-					break;
-				//Char
-				case 4:
-					break;
-				//Label
-				case 5:
-					break;
-				//Quantidade de parametros
-				case 6:
-					break;
-				//Inativo
-				case -1:
-					break;
-			}
-		}
-		*/
 		else if(!strcmp(p->campo1, "if_f")){
 			switch (p->flagCampo2) {
 				//Vazio
@@ -2539,35 +2393,57 @@ void machineCodeGen(){
 						}
 						break;
 					case 3:
-						hashIndex = p->campo2;
-						b = hashTable[hashIndex];
-						if(b == NULL){
-							return;
+
+
+						//Parametro eh um vetor. Entao carrega a referencia
+						if(p->flagCampo4 == 8){
+							hashIndex = p->campo2;
+							b = hashTable[hashIndex];
+							elemento2->campo1 = "LOADI";
+							elemento2->campo4 = b->memloc;
+							inputMemloc = b->memloc;
+							// elemento2->campo4 = 5000;
+							elemento2->flagCampo4 = 8;
+							elemento2->flagCampo3 = 0;
+							elemento2->campo3 = 0;
+							reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+							if(reg1 != -1){
+								elemento2->campo2 = reg1;
+								setRegistradorUsado(bancoDeRegistradores, reg1);
+								elemento2->flagCampo2 = 7;
+								insereFinal(codigo_de_maquina, *elemento2);
+								posicaoMemoriaDeInstrucoes++;
+							}
+							// imprimeQuadra(elemento2);
+							quadraReset(elemento2);
 						}
-						elemento2->campo1 = "LOAD";
-						elemento2->campo4 = b->memloc;
-						inputMemloc = b->memloc;
-						// elemento2->campo4 = 5000;
-						elemento2->flagCampo4 = 8;
-						elemento2->flagCampo3 = 0;
-						elemento2->campo3 = 0;
-						reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
-						if(reg1 != -1){
-							elemento2->campo2 = reg1;
-							setRegistradorUsado(bancoDeRegistradores, reg1);
-							elemento2->flagCampo2 = 7;
-							insereFinal(codigo_de_maquina, *elemento2);
-							posicaoMemoriaDeInstrucoes++;
+						else{
+							hashIndex = p->campo2;
+							b = hashTable[hashIndex];
+							elemento2->campo1 = "LOAD";
+							elemento2->campo4 = b->memloc;
+							inputMemloc = b->memloc;
+							// elemento2->campo4 = 5000;
+							elemento2->flagCampo4 = 8;
+							elemento2->flagCampo3 = 0;
+							elemento2->campo3 = 0;
+							reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+							if(reg1 != -1){
+								elemento2->campo2 = reg1;
+								setRegistradorUsado(bancoDeRegistradores, reg1);
+								elemento2->flagCampo2 = 7;
+								insereFinal(codigo_de_maquina, *elemento2);
+								posicaoMemoriaDeInstrucoes++;
+							}
+							// imprimeQuadra(elemento2);
+							quadraReset(elemento2);
 						}
-						// imprimeQuadra(elemento2);
-						quadraReset(elemento2);
 						break;
 				}
 
 				switch (p->flagCampo4) {
 					case 8:
-						// @TODO: tratar o caso do vetor por referencia
-
+						// @TODO: dar store da referencia do vetor na posicao de memoria do vetor da funcao
 						break;
 				}
 				regOutput = reg1;
@@ -2584,6 +2460,34 @@ void machineCodeGen(){
 				setRegistradorLivre(bancoDeRegistradores, reg1);
 				// imprimeQuadra(elemento2);
 				quadraReset(elemento2);
+
+				if(vetorPorReferencia){
+					reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+					//Carrega o endereco de memoria do vetor original
+					elemento2->campo1 = "MOVE";
+					elemento2->campo2 = reg1;
+					elemento2->campo3 = 0;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 0;
+					elemento2->campo4 = reg3; //Endereco de memoria do vetor original
+					elemento2->flagCampo4 = 7;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					quadraReset(elemento2);
+
+					// Grava o endereco de memoria do vetor original na memoria do
+					// vetor da funcao
+					elemento2->campo1 = "STORE";
+					elemento2->campo2 = reg1;
+					elemento2->campo3 = 0;
+					elemento2->campo4 = p->campo4 + 1;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 0;
+					elemento2->flagCampo4 = 8;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					quadraReset(elemento2);
+				}
 			}
 
 			// Caso a proxima instrucao seja uma chamada da funcao input()
@@ -2735,21 +2639,21 @@ void machineCodeGen(){
 					break;
 			}
 		}
-		//Chamada da funcao input()
-		if(p->campo2 == 13){
-			// elemento2->campo1 = "STORE do input";
-			elemento2->campo1 = "STORE";
-			elemento2->campo2 = fimDoBancoDeRegistradores;
-			elemento2->campo3 = 0;
-			elemento2->campo4 = inputMemloc;
-			elemento2->flagCampo2 = 7;
-			elemento2->flagCampo3 = 0;
-			elemento2->flagCampo4 = 8;
-			insereFinal(codigo_de_maquina, *elemento2);
-			posicaoMemoriaDeInstrucoes++;
-			quadraReset(elemento2);
+			//Chamada da funcao input()
+			if(p->campo2 == 13){
+				// elemento2->campo1 = "STORE do input";
+				elemento2->campo1 = "STORE";
+				elemento2->campo2 = fimDoBancoDeRegistradores;
+				elemento2->campo3 = 0;
+				elemento2->campo4 = inputMemloc;
+				elemento2->flagCampo2 = 7;
+				elemento2->flagCampo3 = 0;
+				elemento2->flagCampo4 = 8;
+				insereFinal(codigo_de_maquina, *elemento2);
+				posicaoMemoriaDeInstrucoes++;
+				quadraReset(elemento2);
+			}
 
-		}
 
 		else if(!strcmp(p->campo1, "ret")){
 			funcaoComRetorno = 1;
@@ -2815,10 +2719,35 @@ void machineCodeGen(){
 					break;
 			}
 		}
+		else if(!strcmp(p->campo1, "vet")){
+			elemento2->campo1 = "LOADI";
+			reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+			elemento2->campo2 = reg1;
+			elemento2->campo3 = 0;
+			elemento2->campo4 = hashTable[p->campo2]->memloc;
+			elemento2->flagCampo2 = 7;
+			elemento2->flagCampo3 = 0;
+			elemento2->flagCampo4 = 8;
+			insereFinal(codigo_de_maquina, *elemento2);
+			posicaoMemoriaDeInstrucoes++;
+			quadraReset(elemento2);
+
+			elemento2->campo1 = "STORE";
+			elemento2->campo2 = reg1;
+			elemento2->campo3 = 0;
+			elemento2->campo4 = hashTable[p->campo2]->memloc;
+			elemento2->flagCampo2 = 7;
+			elemento2->flagCampo3 = 0;
+			elemento2->flagCampo4 = 8;
+			insereFinal(codigo_de_maquina, *elemento2);
+			posicaoMemoriaDeInstrucoes++;
+			quadraReset(elemento2);
+		}
+
 		p = p->prox;
 	}
 	// imprimeLista(codigo_de_maquina);
-	imprimeListaFormatada(codigo_de_maquina);
+	// imprimeListaFormatada(codigo_de_maquina);
 
 	p = codigo_de_maquina->inicio;
 	quadraReset(elemento2);

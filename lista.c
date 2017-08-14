@@ -16,6 +16,7 @@ void insereFinal( lista *l, quadra novo){
     no->flagCampo3=novo.flagCampo3;
     no->flagCampo4=novo.flagCampo4;
     no->flagVetor = novo.flagVetor;
+    no->vetorPorReferencia = novo.vetorPorReferencia;
     if(l->inicio == NULL){//lista vazia
         l->inicio = no;
         l->fim = no;
@@ -32,7 +33,7 @@ void imprimeLista(lista *l){
     quadra *p;
     p = l->inicio;
     while(p != NULL){
-        printf("(%s,%d,%d,%d) (flag1:%d,flag2:%d,flag3:%d, flagVetor:%d)\n",p->campo1,p->campo2,p->campo3,p->campo4,p->flagCampo2,p->flagCampo3,p->flagCampo4, p->flagVetor);
+        printf("(%s,%d,%d,%d) (flag1:%d,flag2:%d,flag3:%d, flagVetor:%d, referencia: %d)\n",p->campo1,p->campo2,p->campo3,p->campo4,p->flagCampo2,p->flagCampo3,p->flagCampo4, p->flagVetor, p->vetorPorReferencia);
         p = p->prox;
     }
 }
