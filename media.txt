@@ -1,0 +1,17 @@
+void main(void){
+    int i;
+    int media;
+    int numeros[4];
+    int n;
+    n = 4;
+    i = 1;
+    media = 0;
+    while( i <= n){
+        media = numeros[i] + media;
+        i = i + 1;
+    }
+
+    media = media / n;
+    output(media);
+
+}

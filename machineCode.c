@@ -474,7 +474,6 @@ void machineCodeGen(){
 			}
 		}
 		else if(!strcmp(p->campo1, "asg")){
-
 			switch (p->flagCampo2) {
 				//Vazio
 				case 0:
@@ -643,7 +642,21 @@ void machineCodeGen(){
 
 				//Hash
 				case 3:
-					// elemento2->campo4 = b->memloc;
+				elemento2->campo1 = "LOAD";
+				hashIndex = p->campo4;
+				b = hashTable[hashIndex];
+				elemento2->campo4 = b->memloc;
+				elemento2->flagCampo4 = 8;
+				reg2 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+				elemento2->flagCampo3 = 0;
+				if(reg2 != -1){
+					elemento2->campo2 = reg2;
+					setRegistradorUsado(bancoDeRegistradores, reg2);
+					elemento2->flagCampo2 = 7;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+				}
+
 					// elemento2->flagCampo4 = 8;
 
 					// elemento2->campo1 = "++ADDI";
@@ -1786,11 +1799,6 @@ void machineCodeGen(){
 
 				//Hash
 				case 3:
-					hashIndex = p->campo4;
-					b = hashTable[hashIndex];
-					if(b != NULL)
-						printf("tem gente\n" );
-					printf("\na--%d--\n", b->memloc);
 					break;
 				//Char
 				case 4:
@@ -1816,6 +1824,7 @@ void machineCodeGen(){
 			elemento2->flagCampo4 = 2;
 			insereFinal(codigo_de_maquina, *elemento2);
 			posicaoMemoriaDeInstrucoes++;
+
 
 			//Calcula o valor da multiplicacao
 			elemento2->campo1 = "ADD";
@@ -2617,8 +2626,8 @@ void machineCodeGen(){
 				case 1:
 
 					inputMemloc = p->campo4;
-					///funcaoComRetorno = 1;
-					// reg1 = registradoresTemporarios[p->campo2];
+					funcaoComRetorno = 1;
+					reg1 = registradoresTemporarios[p->campo2];
 					elemento2->campo1 = "MOVE";
 					hashIndex = p->campo2;
 					b = hashTable[hashIndex];
@@ -2657,6 +2666,45 @@ void machineCodeGen(){
 		else if(!strcmp(p->campo1, "ret")){
 			funcaoComRetorno = 1;
 			switch (p->flagCampo2) {
+				case 2:
+					//Carrega o retorno numa variavel fixa
+					elemento2->campo1 = "LOADI";
+					elemento2->campo4 = p->campo2;
+					elemento2->flagCampo4 = 8;
+					elemento2->campo3 = 0;
+					elemento2->flagCampo3 = 0;
+					// reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+
+					elemento2->flagCampo2 = 7;
+					// elemento2->campo2 = fimDoBancoDeRegistradores - 1;
+					elemento2->campo2 = fimDoBancoDeRegistradores;
+					setRegistradorUsado(bancoDeRegistradores, fimDoBancoDeRegistradores);
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					// imprimeQuadra(elemento2);
+
+					//Pula de volta para a posicao de chamada
+					elemento2->campo1 = "LOAD";
+					elemento2->campo2 = reg1;
+					elemento2->campo3 = 0;
+					// elemento2->campo4 = memlocFuncaoAnterior;
+					elemento2->campo4 = memlocFuncaoAtual;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 0;
+					elemento2->flagCampo4 = 8;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+
+					elemento2->campo1 = "JUMPR";
+					elemento2->campo2 = reg1;
+					elemento2->campo3 = reg1;
+					elemento2->campo4 = 0;
+					elemento2->flagCampo2 = 7;
+					elemento2->flagCampo3 = 7;
+					elemento2->flagCampo4 = 0;
+					insereFinal(codigo_de_maquina, *elemento2);
+					posicaoMemoriaDeInstrucoes++;
+					break;
 				case 3:
 
 					// //Guarda o retorno

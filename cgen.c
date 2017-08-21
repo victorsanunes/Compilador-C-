@@ -369,7 +369,6 @@ static void genDecli(TreeNode * tree, FILE *code){
         case VarK:
           break;
         case VetK:
-
             no.campo1 = "vet";
             if(hashTable[hash(concatena(tree->attr.name, tree->escopo))]==NULL){
                 if(hashTable[hash(concatena(tree->attr.name,"programa"))] != NULL){
@@ -391,7 +390,6 @@ static void genDecli(TreeNode * tree, FILE *code){
           break;
         case FunK:
             no.campo1="lab";
-
             no.campo2=hash(concatena(tree->attr.name, tree->attr.name));
             no.flagCampo2=3;//hash
             no.campo3=0;

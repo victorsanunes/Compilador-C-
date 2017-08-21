@@ -1,0 +1,20 @@
+int ehPar(int n){
+    int divisao;
+    int multiplicacao;
+    divisao = n/2;
+    multiplicacao = divisao * 2;
+    if(multiplicacao == n){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+
+}
+void main(void){
+    int n;
+    int i;
+    n = 45;
+    i = ehPar(n);
+    output(i);
+}

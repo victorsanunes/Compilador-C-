@@ -1,0 +1,28 @@
+void swapVetor(int v1[], int v2[], int tamanho){
+    int aux;
+    int i;
+    i = 1;
+    while(i <= tamanho){
+        aux = v1[i];
+        v1[i] = v2[i];
+        v2[i] = aux;
+        i = i + 1;
+    }
+
+}
+void main(void){
+    int v1[4];
+    int v2[4];
+    int n;
+    n = 4;
+    v1[1] = 10;
+    v1[2] = 20;
+    v1[3] = 30;
+    v1[4] = 40;
+    v2[1] = 50;
+    v2[2] = 60;
+    v2[3] = 70;
+    v2[4] = 80;
+    swapVetor(v1, v2, n);
+    output(v1[1]);
+}

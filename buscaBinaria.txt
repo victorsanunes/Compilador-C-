@@ -1,0 +1,17 @@
+int buscaBinaria(int vetor[], int elemento, int tamanho){
+    int index;
+    index = tamanho / 2;
+    if(vetor[index] == elemento){
+        return index;
+    }
+    else{
+        if(elemento >= vetor[index])
+        while(vetor[index] != elemento){
+
+        }
+    }
+
+}
+void main(void){
+    output(pow(3, 3));
+}

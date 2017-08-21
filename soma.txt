@@ -1,8 +1,9 @@
-int foo(void){
-  output(456);
-  return 0;
-}
+
 void main(void){
-    int r;
-    r = foo();
+    int x;
+    int y;
+    int z;
+    int w;
+    int result;
+    result = result  / 8;
 }
