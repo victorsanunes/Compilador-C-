@@ -1,0 +1,6 @@
+void main(void){
+    int x;
+    x = 12 / 2;
+    output(x);
+    /*swapVetor(v1, v2, n);*/
+}
