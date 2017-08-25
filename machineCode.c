@@ -1844,8 +1844,16 @@ void machineCodeGen(){
 
 				//Constante
 				case 2:
-					elemento2->campo1 = "LOADI";
-					elemento2->campo4 = p->campo2;
+					elemento2->campo1 = "LOADI num1  ";
+					if((p->flagCampo3 == 2)){
+						if(p->campo2 >= p->campo3){
+							elemento2->campo4 = p->campo2;
+						}
+						else{
+							elemento2->campo4 = 0;
+						}
+					}
+
 					elemento2->flagCampo4 = 2;
 					elemento2->flagCampo3 = 0;
 					elemento2->campo3 = 0;
@@ -1932,7 +1940,7 @@ void machineCodeGen(){
 
 				//Constante
 				case 2:
-					elemento2->campo1 = "LOADI";
+					elemento2->campo1 = "LOADI num2  ";
 					elemento2->campo4 = p->campo3;
 					elemento2->flagCampo4 = 2;
 					elemento2->flagCampo3 = 0;
@@ -2018,7 +2026,7 @@ void machineCodeGen(){
 			}
 
 			// Carrega o comparador
-			elemento2->campo1 = "LOADI";
+			elemento2->campo1 = "LOADI comp";
 			reg4 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
 			elemento2->campo2 = reg4;
 			setRegistradorUsado(bancoDeRegistradores, reg4);
@@ -2031,7 +2039,7 @@ void machineCodeGen(){
 			posicaoMemoriaDeInstrucoes++;
 
 			// Carrega o contador para resultado
-			elemento2->campo1 = "LOADI";
+			elemento2->campo1 = "LOADI resul";
 			reg5 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
 			elemento2->campo2 = reg5;
 			setRegistradorUsado(bancoDeRegistradores, reg5);

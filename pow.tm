@@ -12,7 +12,7 @@
 (lab,L2,_,_)
 (ret,resultado,_,_)
 (lab,94,_,_)
-,*2(param,2,_,_)
+,*3(param,3,_,_)
 ,*3(param,3,_,_)
 (call,83,2,t3)
 (param,t3,_,_)

@@ -11,5 +11,5 @@ int pow(int base, int expoente){
     return resultado;
 }
 void main(void){
-    output(pow(2, 3));
+    output(pow(3, 3));
 }
