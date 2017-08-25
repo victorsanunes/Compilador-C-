@@ -283,6 +283,8 @@ void machineCodeGen(){
 	// posicaoDeFuncoes[123] = 6; // Posicao da output()
 	posicaoDeFuncoes[123] = 5; // Posicao da output()
 	posicaoDeFuncoes[13] = 2; // Posicao do input()
+
+	// **** GERACO DO PRIMEIRO CODIGO OBJETO ****
 	while(p != NULL){
 		if(!strcmp(p->campo1, "lab")){
 			// if(funcaoComRetorno == -1 ){
@@ -532,7 +534,7 @@ void machineCodeGen(){
 					else if(p->flagVetor == 2){
 
 						//Carrega o valor do memloc
-						elemento2->campo1 = "LOADI";
+						elemento2->campo1 = "LOAD";
 						reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
 						if(reg1 != -1){
 							elemento2->campo2 = reg1;
@@ -1714,7 +1716,7 @@ void machineCodeGen(){
 				//Hash
 				case 3:
 					elemento2->campo1 = "LOAD";
-					hashIndex = p->campo2;
+					hashIndex = p->campo3;
 					b = hashTable[hashIndex];
 					elemento2->campo4 = b->memloc;
 					elemento2->flagCampo4 = 8;

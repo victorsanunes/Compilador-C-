@@ -14,7 +14,7 @@ int ehPar(int n){
 void main(void){
     int n;
     int i;
-    n = 45;
+    n = 44;
     i = ehPar(n);
     output(i);
 }

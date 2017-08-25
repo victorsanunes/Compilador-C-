@@ -1,4 +1,4 @@
-int fatorial(int n){
+int calculaFatorial(int n){
     int i;
     int fatorial;
     int resultado;
@@ -14,7 +14,7 @@ int fatorial(int n){
 }
 
 void main(void){
-    int n;
-    int i;
-    output(fatorial(5));
+    int resultado;
+    resultado = calculaFatorial(5);
+    output(resultado);
 }
