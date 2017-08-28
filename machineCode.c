@@ -51,7 +51,7 @@ void binaryConverter(lista *l){
 	char *comentario;
 	int i = 0;
 	while(p != NULL){
-		printf("InstrRAM[%d] <= { ", i);
+		printf("Instrucao[%d] <= { ", i);
 		if(!strcmp(p->campo1, "ADD") || !strcmp(p->campo1, "SUB")){
 			if(!strcmp(p->campo1, "ADD")){
 				printf("%s, ", ADD);
@@ -548,6 +548,23 @@ void machineCodeGen(){
 							posicaoMemoriaDeInstrucoes++;
 						}
 					}
+
+					else if(p->flagVetor == 1){
+						//Carrega o valor do memloc
+						elemento2->campo1 = "LOAD";
+						reg1 = buscaRegistradorVazio(bancoDeRegistradores, BR_SIZE);
+						if(reg1 != -1){
+							elemento2->campo2 = reg1;
+							elemento2->flagCampo2 = 7;
+							elemento2->campo3 = 0;
+							elemento2->flagCampo3 = 0;
+							elemento2->campo4 = hashTable[p->campo2]->memloc;
+							elemento2->flagCampo4 = 8;
+							setRegistradorUsado(bancoDeRegistradores, reg1);
+							insereFinal(codigo_de_maquina, *elemento2);
+							posicaoMemoriaDeInstrucoes++;
+						}
+					}
 					break;
 				//Char
 				case 4:
@@ -644,7 +661,7 @@ void machineCodeGen(){
 				//Hash
 				case 3:
 
-					elemento2->campo1 = "LOADI";
+					elemento2->campo1 = "LOAD";
 					hashIndex = p->campo4;
 					b = hashTable[hashIndex];
 					elemento2->campo4 = b->memloc;
