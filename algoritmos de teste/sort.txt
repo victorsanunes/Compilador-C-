@@ -3,12 +3,16 @@ void sort(int num[], int tam){
     int j;
     int min;
     int aux;
+    int auxVet1;
+    int auxVet2;
     i = 1;
-    while (i < tam){
+    while (i <= tam){
         min = i;
         j = i + 1;
         while (j <= tam){
-            if(num[j] < num[min])
+            auxVet1 = num[j];
+            auxVet2 = num[min];
+            if(auxVet1 < auxVet2)
                 min = j;
             j = j + 1;
         }
@@ -19,15 +23,15 @@ void sort(int num[], int tam){
         }
         i = i + 1;
     }
-    output(i);
 }
 void main(void){
     int vetor[4];
     int i;
-    i = 4;
     vetor[1] = 9;
     vetor[2] = 6;
     vetor[3] = 8;
     vetor[4] = 7;
-    sort(vetor, i);
+    sort(vetor, 4);
+    i = input();
+    output(vetor[i]);
 }

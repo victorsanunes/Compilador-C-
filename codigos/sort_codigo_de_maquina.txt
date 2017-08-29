@@ -1,0 +1,133 @@
+InstrRAM[0] <= { 5'd13, 5'd10, 16'd83, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[1] <= { 5'd17, 5'd10, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[2] <= { 5'd22, 5'd31, 22'd0};  // IN RD <= Chaves
+InstrRAM[3] <= { 5'd12, 5'd10, 16'd0, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[4] <= { 5'd17, 5'd10, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[5] <= { 5'd23, 5'd31, 22'd0 };  // OUT RD
+InstrRAM[6] <= { 5'd12, 5'd10, 16'd1, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[7] <= { 5'd17, 5'd10, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[8] <= { 5'd13, 5'd0, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[9] <= { 5'd13, 5'd1, 16'd6, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[10] <= { 5'd14, 5'd0, 16'd6, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[11] <= { 5'd12, 5'd0, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[12] <= { 5'd12, 5'd1, 16'd5, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[13] <= { 5'd11, 5'd2, 5'd0, 5'd1, 12'd0 };  // SLE RD, RS, RT
+InstrRAM[14] <= { 5'd13, 5'd0, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[15] <= { 5'd19, 5'd0, 5'd2, 16'd81, 1'd0 };  // BNE RS, RT, IM:15
+InstrRAM[16] <= { 5'd12, 5'd0, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[17] <= { 5'd13, 5'd1, 16'd8, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[18] <= { 5'd14, 5'd0, 16'd8, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[19] <= { 5'd12, 5'd1, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[20] <= { 5'd13, 5'd3, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[21] <= { 5'd0, 5'd4, 5'd3, 5'd1, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[22] <= { 5'd13, 5'd1, 16'd7, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[23] <= { 5'd14, 5'd4, 16'd7, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[24] <= { 5'd12, 5'd1, 16'd7, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[25] <= { 5'd12, 5'd3, 16'd5, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[26] <= { 5'd11, 5'd4, 5'd1, 5'd3, 12'd0 };  // SLE RD, RS, RT
+InstrRAM[27] <= { 5'd13, 5'd1, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[28] <= { 5'd19, 5'd1, 5'd4, 16'd50, 1'd0 };  // BNE RS, RT, IM:15
+InstrRAM[29] <= { 5'd12, 5'd1, 16'd3, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[30] <= { 5'd12, 5'd3, 16'd8, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[31] <= { 5'd0, 5'd5, 5'd1, 5'd3, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[32] <= { 5'd26, 5'd1, 5'd5, 17'd0 };  // LOADR RD, RS --> RD[] <= Mem[RS[]]
+InstrRAM[33] <= { 5'd12, 5'd3, 16'd3, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[34] <= { 5'd12, 5'd5, 16'd7, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[35] <= { 5'd0, 5'd6, 5'd3, 5'd5, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[36] <= { 5'd26, 5'd3, 5'd6, 17'd0 };  // LOADR RD, RS --> RD[] <= Mem[RS[]]
+InstrRAM[37] <= { 5'd8, 5'd5, 5'd3, 5'd5, 12'd0 };  // SLT, RD, RS, RT --> 1: RS[] < RT[]
+InstrRAM[38] <= { 5'd13, 5'd3, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[39] <= { 5'd19, 5'd3, 5'd5, 16'd43, 1'd0 };  // BNE RS, RT, IM:15
+InstrRAM[40] <= { 5'd12, 5'd3, 16'd7, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[41] <= { 5'd13, 5'd5, 16'd8, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[42] <= { 5'd14, 5'd3, 16'd8, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[43] <= { 5'd12, 5'd5, 16'd7, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[44] <= { 5'd13, 5'd6, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[45] <= { 5'd0, 5'd7, 5'd6, 5'd5, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[46] <= { 5'd13, 5'd5, 16'd7, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[47] <= { 5'd14, 5'd7, 16'd7, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[48] <= { 5'd13, 5'd5, 16'd24, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[49] <= { 5'd17, 5'd5, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[50] <= { 5'd12, 5'd5, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[51] <= { 5'd30, 5'd6, 5'd5, 5'd6, 12'd0 };  // SET RD, RS, RT --> 1: RS == RT
+InstrRAM[52] <= { 5'd13, 5'd5, 16'd0, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[53] <= { 5'd19, 5'd5, 5'd6, 16'd74, 1'd0 };  // BNE RS, RT, IM:15
+InstrRAM[54] <= { 5'd12, 5'd5, 16'd3, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[55] <= { 5'd12, 5'd6, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[56] <= { 5'd0, 5'd7, 5'd5, 5'd6, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[57] <= { 5'd26, 5'd5, 5'd7, 17'd0 };  // LOADR RD, RS --> RD[] <= Mem[RS[]]
+InstrRAM[58] <= { 5'd13, 5'd6, 16'd9, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[59] <= { 5'd14, 5'd5, 16'd9, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[60] <= { 5'd12, 5'd6, 16'd3, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[61] <= { 5'd12, 5'd7, 16'd8, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[62] <= { 5'd0, 5'd8, 5'd6, 5'd7, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[63] <= { 5'd26, 5'd6, 5'd8, 17'd0 };  // LOADR RD, RS --> RD[] <= Mem[RS[]]
+InstrRAM[64] <= { 5'd12, 5'd7, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[65] <= { 5'd13, 5'd8, 16'd3, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[66] <= { 5'd12, 5'd8, 16'd3, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[67] <= { 5'd0, 5'd9, 5'd7, 5'd8, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[68] <= { 5'd27, 5'd6, 5'd9, 17'd0 };  // STORER RD, RS --> Mem[RD[]] = RS[]
+InstrRAM[69] <= { 5'd12, 5'd8, 16'd8, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[70] <= { 5'd13, 5'd9, 16'd3, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[71] <= { 5'd12, 5'd9, 16'd3, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[72] <= { 5'd0, 5'd10, 5'd8, 5'd9, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[73] <= { 5'd27, 5'd6, 5'd10, 17'd0 };  // STORER RD, RS --> Mem[RD[]] = RS[]
+InstrRAM[74] <= { 5'd12, 5'd9, 16'd6, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[75] <= { 5'd13, 5'd10, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[76] <= { 5'd0, 5'd11, 5'd10, 5'd9, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[77] <= { 5'd13, 5'd9, 16'd6, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[78] <= { 5'd14, 5'd11, 16'd6, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[79] <= { 5'd13, 5'd9, 16'd11, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[80] <= { 5'd17, 5'd9, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[81] <= { 5'd12, 5'd9, 16'd2, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[82] <= { 5'd17, 5'd9, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[83] <= { 5'd13, 5'd9, 16'd11, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[84] <= { 5'd14, 5'd9, 16'd11, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[85] <= { 5'd13, 5'd9, 16'd9, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[86] <= { 5'd13, 5'd10, 16'd1, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[87] <= { 5'd13, 5'd11, 16'd11, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[88] <= { 5'd0, 5'd11, 5'd11, 5'd10, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[89] <= { 5'd27, 5'd9, 5'd11, 17'd0 };  // STORER RD, RS --> Mem[RD[]] = RS[]
+InstrRAM[90] <= { 5'd13, 5'd9, 16'd6, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[91] <= { 5'd13, 5'd10, 16'd2, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[92] <= { 5'd13, 5'd11, 16'd11, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[93] <= { 5'd0, 5'd11, 5'd11, 5'd10, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[94] <= { 5'd27, 5'd9, 5'd11, 17'd0 };  // STORER RD, RS --> Mem[RD[]] = RS[]
+InstrRAM[95] <= { 5'd13, 5'd9, 16'd8, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[96] <= { 5'd13, 5'd10, 16'd3, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[97] <= { 5'd13, 5'd11, 16'd11, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[98] <= { 5'd0, 5'd11, 5'd11, 5'd10, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[99] <= { 5'd27, 5'd9, 5'd11, 17'd0 };  // STORER RD, RS --> Mem[RD[]] = RS[]
+InstrRAM[100] <= { 5'd13, 5'd9, 16'd7, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[101] <= { 5'd13, 5'd10, 16'd4, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[102] <= { 5'd13, 5'd11, 16'd11, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[103] <= { 5'd0, 5'd11, 5'd11, 5'd10, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[104] <= { 5'd27, 5'd9, 5'd11, 17'd0 };  // STORER RD, RS --> Mem[RD[]] = RS[]
+InstrRAM[105] <= { 5'd12, 5'd9, 16'd11, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[106] <= { 5'd14, 5'd9, 16'd3, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[107] <= { 5'd13, 5'd9, 16'd4, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[108] <= { 5'd14, 5'd9, 16'd5, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[109] <= { 5'd13, 5'd9, 16'd113, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[110] <= { 5'd14, 5'd9, 16'd2, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[111] <= { 5'd13, 5'd9, 16'd8, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[112] <= { 5'd17, 5'd9, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[113] <= { 5'd13, 5'd9, 16'd117, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[114] <= { 5'd14, 5'd9, 16'd0, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[115] <= { 5'd13, 5'd9, 16'd2, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[116] <= { 5'd17, 5'd9, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[117] <= { 5'd15, 5'd9, 5'd31, 17'd0 };  // MOVE RD, RS --> RD <= RS
+InstrRAM[118] <= { 5'd14, 5'd31, 16'd11, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[119] <= { 5'd13, 5'd10, 16'd16, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[120] <= { 5'd14, 5'd9, 16'd16, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[121] <= { 5'd12, 5'd10, 16'd11, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[122] <= { 5'd12, 5'd11, 16'd16, 6'd0 };  // LOAD RD <= Mem[IM:16]
+InstrRAM[123] <= { 5'd0, 5'd12, 5'd10, 5'd11, 12'd0 };  // ADD RD = RS + RT
+InstrRAM[124] <= { 5'd26, 5'd10, 5'd12, 17'd0 };  // LOADR RD, RS --> RD[] <= Mem[RS[]]
+InstrRAM[125] <= { 5'd14, 5'd10, 16'd0, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[126] <= { 5'd15, 5'd31, 5'd10, 17'd0 };  // MOVE RD, RS --> RD <= RS
+InstrRAM[127] <= { 5'd13, 5'd10, 16'd131, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[128] <= { 5'd14, 5'd10, 16'd7, 6'd0 };  // STORE RD, IM:21 --> Mem[IM:21] <= RD[]
+InstrRAM[129] <= { 5'd13, 5'd10, 16'd5, 6'd0 };  // LOADI RD <= IM:21
+InstrRAM[130] <= { 5'd17, 5'd10, 6'd0, 16'd0 };  // JUMPR PC <= RD
+InstrRAM[131] <= { 5'd21, 27'd0 };  // BREAK
+

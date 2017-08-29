@@ -1,10 +1,20 @@
-void main(void){
-    int vetor[2];
+int calculaFatorial(int n){
     int i;
+    int fatorial;
+    int resultado;
+    fatorial = n;
+    resultado = 1;
+    i = n;
+    while(i >= 1){
+        resultado = resultado * fatorial;
+        i = i - 1;
+        fatorial = fatorial - 1;
+    }
+    return resultado;
+}
 
-    i = 25;
-
-    vetor[2] = i;
-
-    output(vetor[2]);
+void main(void){
+    int resultado;
+    resultado = calculaFatorial(5);
+    output(resultado);
 }

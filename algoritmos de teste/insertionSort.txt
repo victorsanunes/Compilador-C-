@@ -1,0 +1,28 @@
+void insertionSort(int array[], int size){
+	int i;
+	int j;
+	int aux;
+	i = 2;
+	while(i <= size){
+		j = i - 1;
+		while((array[j+1] < array[j]) )
+			if(j >= 1){
+				aux = array[j];
+				array[j] = array[j+1];
+				array[j+1] = aux;
+				j = j - 1;
+			}
+	}
+}
+
+void main(void){
+    int vetor[4];
+    int i;
+    vetor[1] = 9;
+    vetor[2] = 6;
+    vetor[3] = 8;
+    vetor[4] = 7;
+    insertionSort(vetor, 4);
+    i = input();
+    output(vetor[i]);
+}
