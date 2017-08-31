@@ -1,11 +1,13 @@
 int calculaFatorial(int n){
+    int j;
     int i;
     int fatorial;
     int resultado;
     fatorial = n;
     resultado = 1;
     i = n;
-    while(i >= 1){
+    j = 1;
+    while(i >= j){
         resultado = fatorial * resultado;
         i = i - 1;
         fatorial = fatorial - 1;

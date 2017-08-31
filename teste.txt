@@ -1,20 +1,22 @@
-int calculaFatorial(int n){
-    int i;
-    int fatorial;
-    int resultado;
-    fatorial = n;
-    resultado = 1;
-    i = n;
-    while(i >= 1){
-        resultado = resultado * fatorial;
-        i = i - 1;
-        fatorial = fatorial - 1;
-    }
-    return resultado;
-}
-
 void main(void){
-    int resultado;
-    resultado = calculaFatorial(5);
-    output(resultado);
+    int i;
+    int media;
+    int numeros[5];
+    int n;
+    n = 5;
+    i = 1;
+    media = 0;
+    numeros[1] = 4;
+    numeros[2] = 5;
+    numeros[3] = 6;
+    numeros[4] = 7;
+    numeros[5] = 8;
+    while( i <= n){
+        media = media + numeros[i];
+        i = i + 1;
+    }
+
+    media = media / n;
+    output(media);
+
 }
