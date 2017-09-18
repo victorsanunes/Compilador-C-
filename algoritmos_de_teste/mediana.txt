@@ -1,0 +1,47 @@
+void sort(int num[], int tam){
+    int i;
+    int j;
+    int min;
+    int aux;
+    int aux2;
+    int auxVet1;
+    int auxVet2;
+    i = 1;
+    while (i <= tam){
+        min = i;
+        j = i + 1;
+        while (j <= tam){
+            auxVet1 = num[j];
+            auxVet2 = num[min];
+            if(auxVet1 < auxVet2)
+                min = j;
+            j = j + 1;
+        }
+        if (i != min){
+            aux = num[i];
+            aux2 = num[min];
+            num[i] = aux2;
+            num[min] = aux;
+        }
+        i = i + 1;
+    }
+}
+
+int calculaMediana(int array[], int size){
+    int m;
+    int i;
+    i = size / 2;
+    m = array[i];
+    return m;
+}
+void main(void){
+    int vetor[4];
+    int i;
+    vetor[1] = 9;
+    vetor[2] = 6;
+    vetor[3] = 8;
+    vetor[4] = 7;
+    sort(vetor, 4);
+    i = calculaMediana(vetor, 4);
+    output(i);
+}

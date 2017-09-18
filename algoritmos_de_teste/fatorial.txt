@@ -17,6 +17,8 @@ int calculaFatorial(int n){
 
 void main(void){
     int resultado;
-    resultado = calculaFatorial(5);
+    int i;
+    i = input();
+    resultado = calculaFatorial(i);
     output(resultado);
 }

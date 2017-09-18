@@ -1,8 +1,8 @@
-int vetor[2];
+
 int foo(int x, int y, int z, int w){
     int result;
     result = 0;
-    while(result >= 0){
+    while(result <= 0){
         if(x < 2)
             result = x + y;
         if(y > 2)
@@ -11,14 +11,16 @@ int foo(int x, int y, int z, int w){
             result = result * 3;
         if(w <= 4){
             if(z == 0)
-                return 0;
+                result = 0;
             if(result != 0)
-                return result/(w - 1);
+                result = result/(w - 1);
         }
     }
+    return result; 
 }
 void main(void){
+    int vetor[2];
     vetor[1] = input();
-    /*vetor[1] = foo(1, vetor[0], 3, 4);
-    output(vetor[1]);*/
+    vetor[2] = foo(1, vetor[1], 3, 4);
+    output(vetor[2]);
 }

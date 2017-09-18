@@ -1,22 +1,70 @@
-void main(void){
+void sort(int num[], int tam){
     int i;
-    int media;
-    int numeros[5];
-    int n;
-    n = 5;
+    int j;
+    int min;
+    int aux;
+    int aux2;
+    int auxVet1;
+    int auxVet2;
     i = 1;
-    media = 0;
-    numeros[1] = 4;
-    numeros[2] = 5;
-    numeros[3] = 6;
-    numeros[4] = 7;
-    numeros[5] = 8;
-    while( i <= n){
-        media = media + numeros[i];
+    while (i <= tam){
+        min = i;
+        j = i + 1;
+        while (j <= tam){
+            auxVet1 = num[j];
+            auxVet2 = num[min];
+            if(auxVet1 < auxVet2)
+                min = j;
+            j = j + 1;
+        }
+        if (i != min){
+            aux = num[i];
+            aux2 = num[min];
+            num[i] = aux2;
+            num[min] = aux;
+        }
+        i = i + 1;
+    }
+}
+void main(void){
+    int num[4];
+    int i;
+    int j;
+    int min;
+    int aux;
+    int aux2;
+    int auxVet1;
+    int auxVet2;
+    int tam;
+    tam = 4;
+
+    num[1] = 9;
+    num[2] = 6;
+    num[3] = 8;
+    num[4] = 7;
+
+    i = 1;
+    while (i <= tam){
+        min = i;
+        j = i + 1;
+        while (j <= tam){
+            auxVet1 = num[j];
+            auxVet2 = num[min];
+            if(auxVet1 < auxVet2)
+                min = j;
+            j = j + 1;
+        }
+        if (i != min){
+            aux = num[i];
+            aux2 = num[min];
+            num[i] = aux2;
+            num[min] = aux;
+            output(num[min]);
+            i = 100; 
+        }
         i = i + 1;
     }
 
-    media = media / n;
-    output(media);
-
+    i = input();
+    output(num[i]);
 }

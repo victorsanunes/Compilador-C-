@@ -1,0 +1,10 @@
+1)	swapVetor (forma de onda: ok) ->imprime mais coisa do que deve
+2)	ehPar (forma de onda: ok ok)
+3) 	encontraMenor -> (forma de onda: ok ok )
+4) 	fatorial (forma de onda: ok ok)
+5) 	fibonacci (forma de onda: ok ok)
+6)	foo -> (forma de onda: ok ok)
+7)	media (forma de onda: ok ok)
+8)	mediana (forma de onda: )
+9)	pow (forma de onda: ok ok)
+10)	sort () -> Taci

@@ -3,6 +3,7 @@ void sort(int num[], int tam){
     int j;
     int min;
     int aux;
+    int aux2;
     int auxVet1;
     int auxVet2;
     i = 1;
@@ -18,7 +19,8 @@ void sort(int num[], int tam){
         }
         if (i != min){
             aux = num[i];
-            num[i] = num[min];
+            aux2 = num[min];
+            num[i] = aux2;
             num[min] = aux;
         }
         i = i + 1;

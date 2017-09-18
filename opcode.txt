@@ -18,7 +18,6 @@
 #define MOVE    "5'd15"
 #define JUMPI   "5'd16"
 #define JUMPR   "5'd17"
-#define SLT     "5'd17"
 #define BEQ     "5'd18"
 #define BNE     "5'd19"
 #define NOP     "5'd20"
@@ -30,9 +29,167 @@
 #define LOADR   "5'd26"
 #define STORER  "5'd27"
 #define NOT     "5'd28"
-#define SHE     "5'd29"
+#define SHT     "5'd29"
 #define SET     "5'd30"
 #define SDT     "5'd31"
+
+void binaryConverter(lista *l){
+	quadra *p = l->inicio;
+	char *comentario;
+	int i = 0;
+	while(p != NULL){
+		printf("Instrucao[%d] <= { ", i);
+		if(!strcmp(p->campo1, "ADD") || !strcmp(p->campo1, "SUB")){
+			if(!strcmp(p->campo1, "ADD")){
+				printf("%s, ", ADD);
+				comentario = " // ADD RD = RS + RT";
+			}
+			else{
+				printf("%s, ", SUB);
+				comentario = " // SUB RD = RS - RT";
+			}
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("12'd0 ");
+
+		}
+		else if(!strcmp(p->campo1, "NOP")){
+			printf("%s, ", JUMPI);
+			printf("16'd1, ");
+			printf("11'd0 ");
+			comentario = " // NOP";
+		}
+		else if(!strcmp(p->campo1, "IN")){
+			printf("%s, ", IN);
+			printf("5'd%d, ", p->campo2);
+			// printf("22'd0 ");
+			// printf("27'd130023424");
+			printf("22'd0");
+			comentario = " // IN RD <= Chaves";
+		}
+		else if(!strcmp(p->campo1, "OUT")){
+			printf("%s, ", OUT);
+			printf("5'd%d, ", p->campo2 );
+			printf("22'd0 ");
+			comentario = " // OUT RD";
+		}
+		else if(!strcmp(p->campo1, "LOAD")){
+			printf("%s, ", LOAD);
+			printf("5'd%d, ", p->campo2);
+			printf("16'd%d, ", p->campo4);
+			printf("6'd0 ");
+			comentario = " // LOAD RD <= Mem[IM:16]";
+		}
+		else if(!strcmp(p->campo1, "LOADI")){
+			printf("%s, ", LOADI);
+			printf("5'd%d, ",  p->campo2);
+			printf("16'd%d, ", p->campo4);
+			printf("6'd0 ");
+			comentario = " // LOADI RD <= IM:21";
+		}
+		else if(!strcmp(p->campo1, "JUMPR")){
+			printf("%s, ", JUMPR);
+			printf("5'd%d, ", p->campo2); //Endereco de leitura
+			printf("6'd0, ");
+			printf("16'd0 " );
+			comentario = " // JUMPR PC <= RD";
+		}
+		else if(!strcmp(p->campo1, "STORE")){
+			printf("%s, ", STORE);
+			printf("5'd%d, ", p->campo2);
+			printf("16'd%d, ", p->campo4);
+			printf("6'd0 ");
+			comentario = " // STORE RD, IM:21 --> Mem[IM:21] <= RD[]";
+		}
+		else if(!strcmp(p->campo1, "HLT")){
+			printf("%s, ", HLT);
+			printf("27'd0 ");
+			comentario = " // BREAK";
+		}
+		else if(!strcmp(p->campo1, "SLE")){
+			printf("%s, ", SLE);
+			printf("5'd%d, ", p->campo2 );
+			printf("5'd%d, ", p->campo3 );
+			printf("5'd%d, ", p->campo4 );
+			printf("12'd0 ");
+			comentario = " // SLE RD, RS, RT";
+		}
+		else if(!strcmp(p->campo1, "BNE")){
+			printf("%s, ", BNE);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("16'd%d, ", p->campo4);
+			printf("1'd0 ");
+			comentario = " // BNE RS, RT, IM:15";
+		}
+		else if(!strcmp(p->campo1, "MOVE")){
+			printf("%s, ", MOVE);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo4);
+			printf("17'd0 ");
+			comentario = " // MOVE RD, RS --> RD <= RS";
+		}
+		else if(!strcmp(p->campo1, "ADDI")){
+			printf("%s, ", ADDI);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("16'd%d, ", p->campo4);
+			printf("1'd0 ");
+			comentario = " // ADDI RD, RS, IM:16";
+		}
+		else if(!strcmp(p->campo1, "STORER")){
+
+			printf("%s, ", STORER);
+			printf("5'd%d, ", p->campo4);
+			printf("5'd%d, ", p->campo2);
+			printf("17'd0 ");
+			comentario = " // STORER RD, RS --> Mem[RD[]] = RS[]";
+		}
+		else if(!strcmp(p->campo1, "LOADR")){
+			printf("%s, ", LOADR);
+			printf("5'd%d, ", p->campo2 );
+			printf("5'd%d, ", p->campo4 );
+			printf("17'd0 ");
+			comentario = " // LOADR RD, RS --> RD[] <= Mem[RS[]]";
+		}
+		else if(!strcmp(p->campo1, "SHE")){
+			printf("%s, ", SHE);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("12'd0 ");
+			comentario = " // SHE, RD, RS, RT --> 1: RS[] >= RT[]";
+		}
+		else if(!strcmp(p->campo1, "SLT")){
+			printf("%s, ", SLT);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("12'd0 ");
+			comentario = " // SLT, RD, RS, RT --> 1: RS[] < RT[]";
+		}
+		else if(!strcmp(p->campo1, "SHT")){
+			printf("%s, ", SHT);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("12'd0 ");
+			comentario = " // SHE, RD, RS, RT --> 1: RS[] > RT[]";
+		}
+		else if(!strcmp(p->campo1, "SET")){
+			printf("%s, ", SET );
+			printf("5'd%d, ",p->campo2 );
+			printf("5'd%d, ",p->campo4 );
+			printf("5'd%d, ",p->campo3 );
+			printf("12'd0 ");
+			comentario = " // SET RD, RS, RT --> 1: RS == RT";
+		}
+		printf("}; %s\n", comentario);
+		p = p->prox;
+		i++;
+	}
+}
 //====================================================================
 
 //Opcode processador do Victor Nunes
@@ -47,7 +204,7 @@
 #define ORI 	/*000111*/ "6'd7"
 #define NOT 	/*001000*/ "6'd8"
 #define XOR		/*001001*/ "6'd9"
-#define JUMPR	/*001011*/ "6'd11"
+#define JUMPI	/*001011*/ "6'd11"
 #define MOVE	/*001101*/ "6'd13"
 #define NOP 	/*001111*/ "6'd15"
 #define HALT	/*010000*/ "6'd16"
@@ -70,4 +227,167 @@
 #define SET		/*100001*/ "6'd33"
 #define LOADR 	"6'd34"
 #define STORER	"6'd35"
+#define JUMPR   "6'd36"
+
+void binaryConverter(lista *l){
+	quadra *p = l->inicio;
+	char *comentario;
+	int i = 0;
+	while(p != NULL){
+		printf("Instrucao[%d] <= { ", i);
+		if(!strcmp(p->campo1, "ADD") || !strcmp(p->campo1, "SUB")){
+			if(!strcmp(p->campo1, "ADD")){
+				printf("%s, ", ADD);
+				comentario = " // ADD RD = RS + RT";
+			}
+			else{
+				printf("%s, ", SUB);
+				comentario = " // SUB RD = RS - RT";
+			}
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("11'd0 ");
+
+		}
+		else if(!strcmp(p->campo1, "NOP")){
+			printf("%s, ", JUMPI);
+			printf("16'd1, ");
+			printf("11'd0 ");
+			comentario = " // NOP";
+		}
+		else if(!strcmp(p->campo1, "IN")){
+			printf("%s, ", IN);
+			printf("5'd%d, ", p->campo2);
+			// printf("22'd0 ");
+			// printf("27'd130023424");
+			printf("21'd0");
+			comentario = " // IN RD <= Chaves";
+		}
+		else if(!strcmp(p->campo1, "OUT")){
+			printf("%s, ", OUT);
+			printf("5'd%d, ", p->campo2 );
+			printf("21'd0 ");
+			comentario = " // OUT RD";
+		}
+		else if(!strcmp(p->campo1, "LOAD")){
+			printf("%s, ", LOAD);
+			printf("5'd%d, ", p->campo2);
+			printf("21'd%d", p->campo4);
+			comentario = " // LOAD RD <= Mem[IM:16]";
+		}
+		else if(!strcmp(p->campo1, "LOADI")){
+			printf("%s, ", LOADI);
+			printf("5'd%d, ",  p->campo2);
+			printf("21'd%d", p->campo4);
+			comentario = " // LOADI RD <= IM:21";
+		}
+		else if(!strcmp(p->campo1, "JUMPR")){
+			printf("%s, ", JUMPR);
+			printf("5'd%d, ", p->campo2); //Endereco de leitura
+			printf("6'd0, ");
+			printf("15'd0 " );
+			comentario = " // JUMPR PC <= RD";
+		}
+		else if(!strcmp(p->campo1, "STORE")){
+			printf("%s, ", STORE);
+			printf("5'd%d, ", p->campo2);
+			printf("21'd%d", p->campo4);
+			comentario = " // STORE RD, IM:21 --> Mem[IM:21] <= RD[]";
+		}
+		else if(!strcmp(p->campo1, "HLT")){
+			printf("%s, ", HLT);
+			printf("26'd0 ");
+			comentario = " // BREAK";
+		}
+		else if(!strcmp(p->campo1, "SLE")){
+			printf("%s, ", SLE);
+			printf("5'd%d, ", p->campo2 );
+			printf("5'd%d, ", p->campo3 );
+			printf("5'd%d, ", p->campo4 );
+			printf("11'd0 ");
+			comentario = " // SLE RD, RS, RT";
+		}
+		else if(!strcmp(p->campo1, "BNE")){
+			printf("%s, ", BNE);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("11'd0, ");
+			printf("5'd%d", p->campo4);
+			comentario = " // BNE RS, RT, IM:15";
+		}
+		else if(!strcmp(p->campo1, "MOVE")){
+			printf("%s, ", MOVE);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo4);
+			printf("16'd0 ");
+			comentario = " // MOVE RD, RS --> RD <= RS";
+		}
+		else if(  (!strcmp(p->campo1, "ADDI") ) || (!strcmp(p->campo1, "SUBI")) ){
+			if(!strcmp(p->campo1, "ADDI")){
+				printf("%s, ", ADDI);
+				comentario = " // ADDI RD, RS, IM:16";
+			}
+
+			else{
+				comentario = " // SUBI RD, RS, IM:16";
+				printf("%s, ", SUBI);
+			}
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("16'd%d", p->campo4);
+		}
+		else if(!strcmp(p->campo1, "STORER")){
+
+			printf("%s, ", STORER);
+			printf("5'd%d, ", p->campo4);
+			printf("5'd%d, ", p->campo2);
+			printf("16'd0 ");
+			comentario = " // STORER RD, RS --> Mem[RD[]] = RS[]";
+		}
+		else if(!strcmp(p->campo1, "LOADR")){
+			printf("%s, ", LOADR);
+			printf("5'd%d, ", p->campo2 );
+			printf("5'd%d, ", p->campo4 );
+			printf("16'd0 ");
+			comentario = " // LOADR RD, RS --> RD[] <= Mem[RS[]]";
+		}
+		else if(!strcmp(p->campo1, "SHE")){
+			printf("%s, ", SHE);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("11'd0 ");
+			comentario = " // SHE, RD, RS, RT --> 1: RS[] >= RT[]";
+		}
+		else if(!strcmp(p->campo1, "SLT")){
+			printf("%s, ", SLT);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("11'd0 ");
+			comentario = " // SLT, RD, RS, RT --> 1: RS[] < RT[]";
+		}
+		else if(!strcmp(p->campo1, "SHT")){
+			printf("%s, ", SHT);
+			printf("5'd%d, ", p->campo2);
+			printf("5'd%d, ", p->campo3);
+			printf("5'd%d, ", p->campo4);
+			printf("11'd0 ");
+			comentario = " // SHE, RD, RS, RT --> 1: RS[] > RT[]";
+		}
+		else if(!strcmp(p->campo1, "SET")){
+			printf("%s, ", SET );
+			printf("5'd%d, ",p->campo2 );
+			printf("5'd%d, ",p->campo4 );
+			printf("5'd%d, ",p->campo3 );
+			printf("11'd0 ");
+			comentario = " // SET RD, RS, RT --> 1: RS == RT";
+		}
+		printf("}; %s\n", comentario);
+		p = p->prox;
+		i++;
+	}
+}
+
 //====================================================================
