@@ -29,6 +29,7 @@ void main(void){
     v2[3] = 70;
     v2[4] = 80;
     swapVetor(v1, v2, n);
-    n = 2;
-    output(v1[n]);
+    n = input();
+    n = v1[n];
+    output(n);
 }

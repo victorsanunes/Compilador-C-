@@ -1,5 +1,4 @@
-void main(void){
-    int num[4];
+void sort(int num[], int tam){
     int i;
     int j;
     int min;
@@ -8,14 +7,6 @@ void main(void){
     int auxVet1;
     int auxVet2;
     int lixo;
-    int a;
-    int tam;
-    int mediana;
-    tam = 4;
-    num[1] = 9;
-    num[2] = 6;
-    num[3] = 8;
-    num[4] = 7;
 
     i = 1;
     min = i;
@@ -42,7 +33,20 @@ void main(void){
         lixo = 0;
         i = i + 1 + 0;
     }
-    mediana = tam/2;
-    a = num[mediana];
-    output(a);
+}
+
+void main(void){
+    int num[4];
+    int a;
+    int e;
+    int tam;
+    tam = 4;
+
+    num[1] = 9;
+    num[2] = 6;
+    num[3] = 8;
+    num[4] = 7;
+    sort(num, 4);
+    tam = input();
+    output(num[tam]);
 }

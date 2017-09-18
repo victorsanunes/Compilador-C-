@@ -9,4 +9,4 @@
 
 8)	mediana (forma de onda: )
 9)	pow (forma de onda: ok ok) (FPGA: OK)
-10)	sort (forma de onda: NÃO SEI. NÃO TERMINA) (FPGA: X)
+10)	sort (forma de onda: NÃO SEI. NÃO TERMINA) (FPGA: ok)
