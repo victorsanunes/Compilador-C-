@@ -1,9 +1,9 @@
-int encontraMenor(int num[], int tam){
+void encontraMenor(int num[], int tam){
     int j;
     int min;
     int auxVet1;
     int auxVet2;
-
+    int lixo;
     j = 1;
     min = 1;
     while (j <= tam){
@@ -11,9 +11,11 @@ int encontraMenor(int num[], int tam){
         auxVet2 = num[min];
         if(auxVet1 < auxVet2)
             min = j;
+        lixo = 0;
         j = j + 1;
     }
-    return min;
+    lixo = num[min];
+    output(lixo);
 }
 
 void main(void){
@@ -25,6 +27,5 @@ void main(void){
     array[2] = 66;
     array[3] = 55;
     array[4] = 77;
-    min = encontraMenor(array, n);
-    output(array[min]);
+    encontraMenor(array, n);
 }

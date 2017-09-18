@@ -27,12 +27,14 @@ void sort(int num[], int tam){
     }
 }
 
-int calculaMediana(int array[], int size){
+void calculaMediana(int array[], int size){
     int m;
     int i;
+    int l;
     i = size / 2;
+    l = 0;
     m = array[i];
-    return m;
+    output(m);
 }
 void main(void){
     int vetor[4];
@@ -41,7 +43,6 @@ void main(void){
     vetor[2] = 6;
     vetor[3] = 8;
     vetor[4] = 7;
-    sort(vetor, 4);
-    i = calculaMediana(vetor, 4);
-    output(i);
+    /*sort(vetor, 4);*/
+    calculaMediana(vetor, 4);
 }

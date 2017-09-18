@@ -1,19 +1,19 @@
-int pow(int base, int expoente){
+void main(void){
     int i;
     int j;
     int resultado;
-    resultado = 1;
+    int z;
+    int expoente;
 
+    j = input();
+    expoente = 2;
+    resultado = 1;
     i = 1;
     while(i <= expoente){
-        resultado = base * resultado;
+        z = 0;
+        resultado = j * resultado;
         i = i + 1;
     }
+    output(resultado);
 
-    return resultado;
-}
-void main(void){
-    int i;
-    i = input();
-    output(pow(i, 2));
 }

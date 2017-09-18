@@ -6,25 +6,30 @@ void sort(int num[], int tam){
     int aux2;
     int auxVet1;
     int auxVet2;
+    int lixo;
+
     i = 1;
-    while (i <= tam){
-        min = i;
-        j = i + 1;
-        while (j <= tam){
-            auxVet1 = num[j];
-            auxVet2 = num[min];
-            if(auxVet1 < auxVet2)
-                min = j;
-            j = j + 1;
-        }
-        if (i != min){
-            aux = num[i];
-            aux2 = num[min];
-            num[i] = aux2;
-            num[min] = aux;
-        }
-        i = i + 1;
-    }
+  while (i <= tam){
+      min = i;
+      lixo = 0;
+      j = i + 1;
+      while (j <= tam){
+          auxVet1 = num[j];
+          auxVet2 = num[min];
+          if(auxVet1 < auxVet2)
+              min = j;
+          lixo = 0;
+          j = j + 1;
+      }
+      if (i != min){
+          aux = num[i];
+          aux2 = num[min];
+          num[i] = aux2;
+          num[min] = aux;
+      }
+      lixo = 0;
+      i = i + 1;
+  }
 }
 void main(void){
     int vetor[4];
@@ -34,6 +39,8 @@ void main(void){
     vetor[3] = 8;
     vetor[4] = 7;
     sort(vetor, 4);
-    i = input();
-    output(vetor[i]);
+    /*i = input();*/
+    i = 1;
+    i = vetor[i];
+    output(i);
 }
